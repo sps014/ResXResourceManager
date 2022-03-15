@@ -340,6 +340,9 @@
                 <TextBlock Text="?" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1,0,0,2" />
               </Grid>
             </Button>
+            <Button ToolTip="Create Diff" Style="{StaticResource ToolbarCommandButtonStyle}" Click="Diff_Click">
+              <TextBlock x:Name="diff_label">Diff</TextBlock>
+            </Button>
           </ToolBar>
         </ToolBarTray>
         <Popup IsOpen="{Binding Path=IsChecked, ElementName=ColumnChooserToggleButton, Mode=OneWay}"

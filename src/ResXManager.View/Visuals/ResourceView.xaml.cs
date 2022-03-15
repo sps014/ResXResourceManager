@@ -1,14 +1,15 @@
 ﻿namespace ResXManager.View.Visuals
 {
     using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Composition;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Windows;
-
     using DataGridExtensions;
-
+    using DocumentFormat.OpenXml;
     using Microsoft.Win32;
 
     using ResXManager.Infrastructure;
@@ -17,6 +18,7 @@
 
     using TomsToolbox.Composition;
     using TomsToolbox.Essentials;
+    using TomsToolbox.ObservableCollections;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.Composition.AttributedModel;
@@ -242,5 +244,72 @@
                 get;
             }
         }
+
+        private void Diff_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new();
+            openFileDialog.Title = "Import Snapshot file";
+            openFileDialog.FileName = "Snapshot";
+            openFileDialog.Filter = " Snapshot File | *.snapshot";
+            if (!showDiff && openFileDialog.ShowDialog().GetValueOrDefault())
+            {
+                _resourceManager.LoadSnapshot(File.ReadAllText(openFileDialog.FileName));
+            }
+            Perform();
+
+        }
+        private bool showDiff;
+        public void Perform()
+        {
+
+            if (!showDiff)
+            {
+                var changes = CalcDiff();
+                _resourceViewModel.ResourceTableEntries =
+                    _resourceViewModel.ResourceTableEntries
+                    .ObservableWhere(y => changes.Contains(y))
+                    .ObservableSelectMany(x => x.Container.Entries);
+                diff_label.Text = "Show Diff Only";
+            }
+            else
+            {
+                _resourceViewModel.ResourceTableEntries = _resourceManager.TableEntries;
+                diff_label.Text = "Show All";
+
+            }
+
+            showDiff = !showDiff;
+        }
+        private HashSet<ResourceTableEntry> CalcDiff()
+        {
+            var allChanges = new HashSet<ResourceTableEntry>();
+            var entries = _resourceManager.TableEntries.GroupBy(x => x.Container);
+            foreach (var gp in entries)
+            {
+                foreach (var resource in gp)
+                {
+                    foreach (var lang in resource.Languages)
+                    {
+                        var snap = resource.SnapshotValues.GetValue(lang.Culture);
+                        var value = resource.Values.GetValue(lang.Culture);
+
+                        if (snap == null && value == null)
+                        {
+                            continue;
+                        }
+
+                        if ((snap == null && value != null) ||
+                            (snap != null && value == null) ||
+                            !snap.Equals(value, StringComparison.Ordinal))
+                        {
+                            allChanges.Add(resource);
+                            break;
+                        }
+                    }
+                }
+            }
+            return allChanges;
+        }
     }
+
 }

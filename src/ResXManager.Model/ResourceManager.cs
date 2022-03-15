@@ -76,12 +76,12 @@
         /// <summary>
         /// Gets the loaded resource entities.
         /// </summary>
-        public ObservableCollection<ResourceEntity> ResourceEntities { get; } = new();
+        public ObservableCollection<ResourceEntity> ResourceEntities { get; set; } = new();
 
         /// <summary>
         /// Gets the table entries of all entities.
         /// </summary>
-        public IObservableCollection<ResourceTableEntry> TableEntries { get; }
+        public IObservableCollection<ResourceTableEntry> TableEntries { get; set; }
 
         /// <summary>
         /// Gets the cultures of all entities.

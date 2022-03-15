@@ -62,7 +62,7 @@
 
         public ResourceManager ResourceManager { get; }
 
-        public IObservableCollection<ResourceTableEntry> ResourceTableEntries { get; }
+        public IObservableCollection<ResourceTableEntry> ResourceTableEntries { get; set; }
 
         public ObservableCollection<ResourceEntity> SelectedEntities { get; } = new();
 
@@ -301,7 +301,18 @@
 
             return SelectedEntities.Count == 1;
         }
-
+        private List<ResourceTableEntry> backup;
+        public void ShowDiff(IObservableCollection<ResourceTableEntry> diff)
+        {
+            backup = ResourceTableEntries.ToList();
+            ResourceTableEntries = diff;
+        }
+        public void HideDiff()
+        {
+            ResourceTableEntries.Clear();
+            //IObservableCollection<ResourceTableEntry> col= new ObservableCollection<ResourceTableEntry>();
+            //ResourceTableEntries = col;
+        }
         private void Paste(DataGrid? dataGrid)
         {
             if (dataGrid == null)
