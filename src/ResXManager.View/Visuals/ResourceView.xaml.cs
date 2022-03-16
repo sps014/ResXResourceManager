@@ -269,16 +269,14 @@
                     _resourceViewModel.ResourceTableEntries
                     .ObservableWhere(y => changes.Contains(y))
                     .ObservableSelectMany(x => x.Container.Entries);
-                diff_label.Text = "Show Diff Only";
             }
             else
             {
                 _resourceViewModel.ResourceTableEntries = _resourceManager.TableEntries;
-                diff_label.Text = "Show All";
 
             }
-
             showDiff = !showDiff;
+            diff_check.IsChecked = showDiff;
         }
         private HashSet<ResourceTableEntry> CalcDiff()
         {
