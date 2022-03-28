@@ -8,10 +8,11 @@
     using System.IO;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Input;
     using DataGridExtensions;
     using DocumentFormat.OpenXml;
     using Microsoft.Win32;
-
+    using ResX.Scripting;
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.View.Tools;
@@ -307,6 +308,13 @@
                 }
             }
             return allChanges;
+        }
+
+        private void AutoTranslateBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Mouse.OverrideCursor = Cursors.Wait;
+            AutoTranslation.Start(_resourceViewModel.ResourceManager);
+            Mouse.OverrideCursor = Cursors.Arrow;
         }
     }
 

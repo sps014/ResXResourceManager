@@ -346,6 +346,11 @@
                 <TextBlock x:Name="diff_label">Show Diff Only</TextBlock>
               </StackPanel>
             </Button>
+            <Separator></Separator>
+            <Button ToolTip="Auto Translate" Style="{StaticResource ToolbarCommandButtonStyle}"
+                    x:Name="AutoTranslateBtn" Click="AutoTranslateBtn_Click">
+              <TextBlock Text="Auto Translate"/>
+            </Button>
           </ToolBar>
         </ToolBarTray>
         <Popup IsOpen="{Binding Path=IsChecked, ElementName=ColumnChooserToggleButton, Mode=OneWay}"
