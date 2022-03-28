@@ -291,13 +291,13 @@
                         var snap = resource.SnapshotValues.GetValue(lang.Culture);
                         var value = resource.Values.GetValue(lang.Culture);
 
-                        if (snap == null && value == null)
+                        if (string.IsNullOrWhiteSpace(snap) && string.IsNullOrWhiteSpace(value))
                         {
                             continue;
                         }
 
-                        if ((snap == null && value != null) ||
-                            (snap != null && value == null) ||
+                        if ((string.IsNullOrWhiteSpace(snap) && !string.IsNullOrWhiteSpace(value)) ||
+                            (!string.IsNullOrWhiteSpace(snap) && string.IsNullOrWhiteSpace(value)) ||
                             !snap.Equals(value, StringComparison.Ordinal))
                         {
                             allChanges.Add(resource);
