@@ -56,6 +56,7 @@
 ,{""Extensions"":"".xaml"",""Patterns"":""\""{x:Static properties:$File.$Key}\""""}
 ,{""Extensions"":"".ts"",""Patterns"":""resources.$Key""}
 ,{""Extensions"":"".html"",""Patterns"":""{{ resources.$Key }}""}
+,{""Extensions"":"".vue"",""Patterns"":""{{ $File.$Key }}""}
 ]}";
     }
 }
