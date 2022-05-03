@@ -316,6 +316,11 @@
             AutoTranslation.Start(_resourceViewModel.ResourceManager);
             Mouse.OverrideCursor = Cursors.Arrow;
         }
+
+        private void XlifBtn_Click(object sender, RoutedEventArgs e)
+        {
+            xlifMenu.IsOpen = true;
+        }
     }
 
 }

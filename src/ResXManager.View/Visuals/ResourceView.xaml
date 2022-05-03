@@ -351,6 +351,20 @@
                     x:Name="AutoTranslateBtn" Click="AutoTranslateBtn_Click">
               <TextBlock Text="Auto Translate"/>
             </Button>
+            <Separator></Separator>
+            <Button  x:Name="xlifBtn" Click="XlifBtn_Click">
+              <TextBlock Text="XLIF I/E"/>
+              <Button.ContextMenu>
+                <ContextMenu x:Name="xlifMenu">
+                  <MenuItem Header="Import">
+
+                  </MenuItem>
+                  <MenuItem Header="Export">
+
+                  </MenuItem>
+                </ContextMenu>
+              </Button.ContextMenu>
+            </Button>
           </ToolBar>
         </ToolBarTray>
         <Popup IsOpen="{Binding Path=IsChecked, ElementName=ColumnChooserToggleButton, Mode=OneWay}"
