@@ -359,8 +359,8 @@
                   <MenuItem Header="Import">
 
                   </MenuItem>
-                  <MenuItem Header="Export">
-
+                  <MenuItem Header="Export" x:Name="exportXlifMenu">
+                    
                   </MenuItem>
                 </ContextMenu>
               </Button.ContextMenu>

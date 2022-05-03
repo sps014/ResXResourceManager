@@ -8,6 +8,7 @@
     using System.IO;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Input;
     using DataGridExtensions;
     using DocumentFormat.OpenXml;
@@ -320,6 +321,31 @@
         private void XlifBtn_Click(object sender, RoutedEventArgs e)
         {
             xlifMenu.IsOpen = true;
+            if (exportXlifMenu.Items.Count != 0)
+                return;
+
+            foreach(var p in _resourceManager.ResourceEntities.Select(y=>y.ProjectName).Distinct())
+            {
+                var menu = new MenuItem() { Header = p };
+                foreach (var v in _resourceManager.Cultures)
+                {
+                    if (v.IsNeutral) continue;
+                    var child = new MenuItem() { Header = v.Culture.Name };
+                    menu.Items.Add(child);
+                    child.Click += (_,_) => ExportXliff(p, v);
+                }
+                exportXlifMenu.Items.Add(menu);
+            }
+        }
+
+        private void ExportXliff(string projectName,CultureKey culturekey)
+        {
+           var resources= _resourceManager.TableEntries.Where(y => y.Container.ProjectName == projectName);
+            foreach(var res in resources)
+            {
+                var culturalValue = res.Values.GetValue(culturekey.Culture);
+                var neuralValue = res.Values.FirstOrDefault(x => x.IsNeutralLanguage);
+            }
         }
     }
 
