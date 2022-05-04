@@ -10,12 +10,14 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
+    using System.Xml.Serialization;
     using DataGridExtensions;
     using DocumentFormat.OpenXml;
     using Microsoft.Win32;
     using ResX.Scripting;
     using ResXManager.Infrastructure;
     using ResXManager.Model;
+    using ResXManager.Model.XLif;
     using ResXManager.View.Tools;
 
     using TomsToolbox.Composition;
@@ -255,7 +257,7 @@
             openFileDialog.Filter = " Snapshot File | *.snapshot";
             if (!showDiff && openFileDialog.ShowDialog().GetValueOrDefault())
             {
-                _resourceManager.LoadSnapshot(File.ReadAllText(openFileDialog.FileName));
+                _resourceManager.LoadSnapshot(System.IO.File.ReadAllText(openFileDialog.FileName));
             }
             Perform();
 
@@ -340,12 +342,59 @@
 
         private void ExportXliff(string projectName,CultureKey culturekey)
         {
-           var resources= _resourceManager.TableEntries.Where(y => y.Container.ProjectName == projectName);
-            foreach(var res in resources)
+            var file = new XliffFile();
+            file.File = new Model.XLif.File();
+            file.File.Original = projectName + ".csproj";
+            file.File.Datatype = "resx";
+            file.File.SourceLanguage = "en";
+            file.File.TargetLanguage = culturekey.Culture.Name;
+            file.File.Body = new Body();
+            XmlSerializer serializer = new(typeof(XliffFile));
+            using StringWriter ss = new();
+            var resources = _resourceManager.TableEntries.Where(y => y.Container.ProjectName == projectName);
+            var groups = resources.GroupBy(x => x.Container.UniqueName);
+            file.File.Body.Group = new List<Group>();
+            var l = file.File.Body.Group;
+            foreach (var g in groups)
             {
-                var culturalValue = res.Values.GetValue(culturekey.Culture);
-                var neuralValue = res.Values.FirstOrDefault(x => x.IsNeutralLanguage);
+                var gp = new Group();
+                gp.Datatype = "unknown";
+                gp.Id = g.First().Container.UniqueName;
+                gp.Transunit = new List<Transunit>();
+                foreach(var res in g)
+                {
+                    var culturalValue = res.Values.GetValue(culturekey.Culture);
+                    var key = res.Key;
+                    var neutralValue = res.Values.GetValue(null);
+                    var status = res.Comments.GetValue(culturekey.Culture);
+                    if (!status.StartsWith("@"))
+                        status = "rsInUse";
+                    else
+                        status = status.Replace("@", String.Empty);
+
+                    gp.Transunit.Add(new Transunit()
+                    {
+                        Id=key,
+                        Rowstatus=status,
+                        Source=neutralValue,
+                        Target=new Target() { State="final",Text=culturalValue}
+                    });
+
+                }
+                l.Add(gp);
             }
+            
+            serializer.Serialize(ss, file);
+            var str = ss.ToString();
+
+            SaveFileDialog sfd=new SaveFileDialog();
+            sfd.Filter = "XLIF files|*.xlf";
+
+            if(sfd.ShowDialog().GetValueOrDefault())
+            {
+                System.IO.File.WriteAllText(sfd.FileName, str);
+            }
+
         }
     }
 

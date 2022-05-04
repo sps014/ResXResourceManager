@@ -93,19 +93,19 @@ namespace ResXManager.Model.XLif
         public File File { get; set; }
 
         [XmlAttribute(AttributeName = "version")]
-        public string Version { get; set; }
+        public string Version { get; set; } = "1.2";
 
         [XmlAttribute(AttributeName = "xmlns")]
-        public string Xmlns { get; set; }
+        public string Xmlns { get; set; } = "urn:oasis:names:tc:xliff:document:1.2";
 
-        [XmlAttribute(AttributeName = "xsi")]
-        public string Xsi { get; set; }
+        [XmlAttribute(AttributeName = "xsi", Namespace = "urn:oasis:names:tc:xliff:document:1.2")]
+        public string Xsi { get; set; } = "http://www.w3.org/2001/XMLSchema-instance";
 
-        [XmlAttribute(AttributeName = "schemaLocation")]
-        public string SchemaLocation { get; set; }
+        [XmlAttribute(AttributeName = "schemaLocation", Namespace = "urn:oasis:names:tc:xliff:document:1.2")]
+        public string SchemaLocation { get; set; } = "urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd";
 
-        [XmlAttribute(AttributeName = "sl")]
-        public string Sl { get; set; }
+        [XmlAttribute(AttributeName = "sl", Namespace = "urn:oasis:names:tc:xliff:document:1.2")]
+        public string Sl { get; set; } = "http://www.sisulizer.com";
 
         [XmlText]
         public string Text { get; set; }
