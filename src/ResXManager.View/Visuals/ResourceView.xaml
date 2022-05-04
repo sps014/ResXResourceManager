@@ -356,7 +356,7 @@
               <TextBlock Text="XLIF I/E"/>
               <Button.ContextMenu>
                 <ContextMenu x:Name="xlifMenu">
-                  <MenuItem Header="Import">
+                  <MenuItem Header="Import" Click="XlifImportBtn_Click" x:Name="xlifImportBtn">
 
                   </MenuItem>
                   <MenuItem Header="Export" x:Name="exportXlifMenu">

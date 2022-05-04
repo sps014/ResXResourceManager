@@ -326,7 +326,7 @@
             if (exportXlifMenu.Items.Count != 0)
                 return;
 
-            foreach(var p in _resourceManager.ResourceEntities.Select(y=>y.ProjectName).Distinct())
+            foreach (var p in _resourceManager.ResourceEntities.Select(y => y.ProjectName).Distinct())
             {
                 var menu = new MenuItem() { Header = p };
                 foreach (var v in _resourceManager.Cultures)
@@ -334,13 +334,13 @@
                     if (v.IsNeutral) continue;
                     var child = new MenuItem() { Header = v.Culture.Name };
                     menu.Items.Add(child);
-                    child.Click += (_,_) => ExportXliff(p, v);
+                    child.Click += (_, _) => ExportXliff(p, v);
                 }
                 exportXlifMenu.Items.Add(menu);
             }
         }
 
-        private void ExportXliff(string projectName,CultureKey culturekey)
+        private void ExportXliff(string projectName, CultureKey culturekey)
         {
             var file = new XliffFile();
             file.File = new Model.XLif.File();
@@ -361,7 +361,7 @@
                 gp.Datatype = "unknown";
                 gp.Id = g.First().Container.UniqueName;
                 gp.Transunit = new List<Transunit>();
-                foreach(var res in g)
+                foreach (var res in g)
                 {
                     var culturalValue = res.Values.GetValue(culturekey.Culture);
                     var key = res.Key;
@@ -374,27 +374,65 @@
 
                     gp.Transunit.Add(new Transunit()
                     {
-                        Id=key,
-                        Rowstatus=status,
-                        Source=neutralValue,
-                        Target=new Target() { State="final",Text=culturalValue}
+                        Id = key,
+                        Rowstatus = status,
+                        Source = neutralValue,
+                        Target = new Target() { State = "final", Text = culturalValue }
                     });
 
                 }
                 l.Add(gp);
             }
-            
+
             serializer.Serialize(ss, file);
             var str = ss.ToString().Split('\n');
             str[1] = "<xliff version=\"1.2\" xmlns=\"urn:oasis:names:tc:xliff:document:1.2\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd\" xmlns:sl=\"http://www.sisulizer.com\">";
-            var strg=string.Join("\n", str);
-            SaveFileDialog sfd=new();
+            var strg = string.Join("\n", str);
+            SaveFileDialog sfd = new();
             sfd.Filter = "XLIF files|*.xlf";
 
-            if(sfd.ShowDialog().GetValueOrDefault())
+            if (sfd.ShowDialog().GetValueOrDefault())
             {
                 System.IO.File.WriteAllText(sfd.FileName, strg);
             }
+
+        }
+
+        private void XlifImportBtn_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog sfd = new();
+            sfd.Filter = "XLIF files|*.xlf";
+
+            if (sfd.ShowDialog().GetValueOrDefault())
+            {
+                ImportXlif(System.IO.File.ReadAllText(sfd.FileName));
+            }
+        }
+        private void ImportXlif(string text)
+        {
+            var parts = text.Split('\n');
+            parts[1] = "<xliff>";
+            text = string.Join("\n", parts);
+            XmlSerializer serializer = new(typeof(XliffFile));
+            using StringReader reader = new(text);
+            var xliff = (XliffFile)serializer.Deserialize(reader);
+            var projName = xliff.File.Original.Replace(".csproj", string.Empty);
+            var resources = _resourceManager.TableEntries
+                .Where(y => y.Container.ProjectName == projName);
+
+            if (resources == null)
+                return;
+
+            foreach(var gp in xliff.File.Body.Group)
+            {
+                foreach(var tunit in gp.Transunit)
+                {
+                    var r = resources.First(x => x.Key == tunit.Id);
+                    r.Values.SetValue(xliff.File.TargetLanguage, tunit.Target.Text);
+                    r.Comments.SetValue(xliff.File.TargetLanguage, tunit.Target.State);
+                }
+            }
+            _resourceManager.Save();
 
         }
     }
