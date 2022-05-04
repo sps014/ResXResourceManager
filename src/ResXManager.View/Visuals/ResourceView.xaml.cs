@@ -385,14 +385,15 @@
             }
             
             serializer.Serialize(ss, file);
-            var str = ss.ToString();
-
-            SaveFileDialog sfd=new SaveFileDialog();
+            var str = ss.ToString().Split('\n');
+            str[1] = "<xliff version=\"1.2\" xmlns=\"urn:oasis:names:tc:xliff:document:1.2\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd\" xmlns:sl=\"http://www.sisulizer.com\">";
+            var strg=string.Join("\n", str);
+            SaveFileDialog sfd=new();
             sfd.Filter = "XLIF files|*.xlf";
 
             if(sfd.ShowDialog().GetValueOrDefault())
             {
-                System.IO.File.WriteAllText(sfd.FileName, str);
+                System.IO.File.WriteAllText(sfd.FileName, strg);
             }
 
         }
