@@ -31,6 +31,7 @@
         public event EventHandler<CancelEventArgs>? Reloading;
         public event EventHandler<EventArgs>? Loaded;
         public event EventHandler<LanguageEventArgs>? LanguageChanged;
+        public event EventHandler<LanguageEventArgs>? LanguageAdded;
         public event EventHandler<ProjectFileEventArgs>? ProjectFileSaved;
         public event EventHandler<TextEventArgs>? SolutionFolderChanged;
 
@@ -140,12 +141,13 @@
             try
             {
                 IsLoading = true;
+
+                SolutionFolder = null;
                 await LoadAsync(Array.Empty<ProjectFile>(), CancellationToken.None).ConfigureAwait(true);
             }
             finally
             {
                 IsLoading = false;
-                SolutionFolder = null;
             }
         }
 
@@ -274,7 +276,7 @@
             return hasChanged;
         }
 
-        internal void LanguageAdded(ResourceLanguage language, ProjectFile projectFile)
+        internal void OnLanguageAdded(ResourceLanguage language, ProjectFile projectFile)
         {
             var cultureKey = language.CultureKey;
 
@@ -283,6 +285,7 @@
                 Cultures.Add(cultureKey);
             }
 
+            LanguageAdded?.Invoke(this, new LanguageEventArgs(language));
             OnProjectFileSaved(language, projectFile);
         }
 
