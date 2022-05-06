@@ -367,10 +367,7 @@
                     var key = res.Key;
                     var neutralValue = res.Values.GetValue(null);
                     var status = res.Comments.GetValue(culturekey.Culture);
-                    if (!status.StartsWith("@"))
-                        status = "rsInUse";
-                    else
-                        status = status.Replace("@", String.Empty);
+                    
 
                     gp.Transunit.Add(new Transunit()
                     {
