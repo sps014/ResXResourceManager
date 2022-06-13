@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"><?define ResXManager_TargetDir=$(var.ResXManager.TargetDir)?>
+	<Product Id="*" Name="ResXManagerSetup" Language="1033" Version="1.0.0.0" Manufacturer="Lenze" UpgradeCode="f70f50c6-a1e9-4a49-b245-0a1d8e5c1fa7">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes"/>
+
+		<Feature Id="ProductFeature" Title="ResXManagerSetup" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentGroupRef Id="de_files" />
+			<ComponentGroupRef Id="zh_Hans_files" />
+            <ComponentRef Id="ApplicationShortcut" />
+
+        </Feature>
+
+        <!-- Step 2: Add the shortcut to your installer package -->
+        <DirectoryRef Id="ApplicationProgramsFolder">
+            <Component Id="ApplicationShortcut" Guid="335517f6-12cd-4501-b756-550d4293fd64">
+                <Shortcut Id="ApplicationStartMenuShortcut"
+                     Name="ResXManager "
+                   Description="My Application Description"
+                    Target="[INSTALLFOLDER]ResXManager.exe"
+                          WorkingDirectory="APPLICATIONROOTDIRECTORY"/>
+                <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+                <RegistryValue Root="HKCU" Key="Software\Lenze\ResXManager" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="ResXManagerSetup">
+				  <Directory Id="de" Name="de" />
+				  <Directory Id="zh_Hans" Name="zh-Hans" />
+				</Directory>
+                <Directory Id="ProgramMenuFolder">
+                    <Directory Id="ApplicationProgramsFolder" Name="ResXManager"/>
+                </Directory>
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+			<!-- <Component Id="ProductComponent"> -->
+				<!-- TODO: Insert files, registry keys, and other resources here. -->
+			<!-- </Component> -->
+			<Component Id="System.Collections.Immutable.dll" Guid="971eb83b-b5a9-49e7-a4bd-52465901b2e5">
+			  <File Id="System.Collections.Immutable.dll" Name="System.Collections.Immutable.dll" Source="$(var.ResXManager_TargetDir)System.Collections.Immutable.dll" />
+			</Component>
+			<Component Id="System.ValueTuple.dll" Guid="5e40dbad-cfec-4361-8937-178aff4e660d">
+			  <File Id="System.ValueTuple.dll" Name="System.ValueTuple.dll" Source="$(var.ResXManager_TargetDir)System.ValueTuple.dll" />
+			</Component>
+			<Component Id="DocumentFormat.OpenXml.dll" Guid="aadb4399-0046-4221-90f4-f4e23ba284e0">
+			  <File Id="DocumentFormat.OpenXml.dll" Name="DocumentFormat.OpenXml.dll" Source="$(var.ResXManager_TargetDir)DocumentFormat.OpenXml.dll" />
+			</Component>
+			<Component Id="Newtonsoft.Json.dll" Guid="75f65ce6-f296-48e8-aecd-a38891de3d1f">
+			  <File Id="Newtonsoft.Json.dll" Name="Newtonsoft.Json.dll" Source="$(var.ResXManager_TargetDir)Newtonsoft.Json.dll" />
+			</Component>
+			<Component Id="DataGridExtensions.dll" Guid="9ed2fe2f-e3e3-40bd-bf8b-a8e0285c531e">
+			  <File Id="DataGridExtensions.dll" Name="DataGridExtensions.dll" Source="$(var.ResXManager_TargetDir)DataGridExtensions.dll" />
+			</Component>
+			<Component Id="TomsToolbox.ObservableCollections.dll" Guid="323b36b9-82c8-432b-bcc4-acff0c6edeb4">
+			  <File Id="TomsToolbox.ObservableCollections.dll" Name="TomsToolbox.ObservableCollections.dll" Source="$(var.ResXManager_TargetDir)TomsToolbox.ObservableCollections.dll" />
+			</Component>
+			<Component Id="Microsoft.Xaml.Behaviors.dll" Guid="0e4ce966-09b5-4513-bef6-9d05580af152">
+			  <File Id="Microsoft.Xaml.Behaviors.dll" Name="Microsoft.Xaml.Behaviors.dll" Source="$(var.ResXManager_TargetDir)Microsoft.Xaml.Behaviors.dll" />
+			</Component>
+			<Component Id="TomsToolbox.Composition.Ninject.dll" Guid="50c8ecac-793e-4d3c-ab4e-ec71f09ca394">
+			  <File Id="TomsToolbox.Composition.Ninject.dll" Name="TomsToolbox.Composition.Ninject.dll" Source="$(var.ResXManager_TargetDir)TomsToolbox.Composition.Ninject.dll" />
+			</Component>
+			<Component Id="ResXManager.Translators.dll" Guid="c2fa5e4e-952a-4f41-8fa7-5a51bb323f62">
+			  <File Id="ResXManager.Translators.dll" Name="ResXManager.Translators.dll" Source="$(var.ResXManager_TargetDir)ResXManager.Translators.dll" />
+			</Component>
+			<Component Id="TomsToolbox.Essentials.dll" Guid="a1037f92-e43e-4418-a68e-cd7e2051a073">
+			  <File Id="TomsToolbox.Essentials.dll" Name="TomsToolbox.Essentials.dll" Source="$(var.ResXManager_TargetDir)TomsToolbox.Essentials.dll" />
+			</Component>
+			<Component Id="TomsToolbox.Composition.dll" Guid="89245943-eb88-4534-bfa5-54bf845bed8b">
+			  <File Id="TomsToolbox.Composition.dll" Name="TomsToolbox.Composition.dll" Source="$(var.ResXManager_TargetDir)TomsToolbox.Composition.dll" />
+			</Component>
+			<Component Id="Ninject.dll" Guid="ee65743a-30c8-4d4a-a1f0-30f192824236">
+			  <File Id="Ninject.dll" Name="Ninject.dll" Source="$(var.ResXManager_TargetDir)Ninject.dll" />
+			</Component>
+			<Component Id="ResXManager.exe" Guid="572d9a97-3e41-4b58-a0c7-210df8526de1">
+			  <File Id="ResXManager.exe" Name="ResXManager.exe" Source="$(var.ResXManager_TargetDir)ResXManager.exe" />
+			</Component>
+			<Component Id="ResXManager.exe.config" Guid="92879276-eb28-4363-9fd3-c0972eb815ec">
+			  <File Id="ResXManager.exe.config" Name="ResXManager.exe.config" Source="$(var.ResXManager_TargetDir)ResXManager.exe.config" />
+			</Component>
+			<Component Id="TomsToolbox.Wpf.dll" Guid="1f3a4e50-f969-4aa4-8679-2855aa3c3959">
+			  <File Id="TomsToolbox.Wpf.dll" Name="TomsToolbox.Wpf.dll" Source="$(var.ResXManager_TargetDir)TomsToolbox.Wpf.dll" />
+			</Component>
+			<Component Id="ResXManager.View.dll" Guid="92993d95-156a-49e8-aeb8-ed127e5b5968">
+			  <File Id="ResXManager.View.dll" Name="ResXManager.View.dll" Source="$(var.ResXManager_TargetDir)ResXManager.View.dll" />
+			</Component>
+			<Component Id="TomsToolbox.Wpf.Styles.dll" Guid="7a672fc5-50fa-4269-9ca7-48c9e2a118ea">
+			  <File Id="TomsToolbox.Wpf.Styles.dll" Name="TomsToolbox.Wpf.Styles.dll" Source="$(var.ResXManager_TargetDir)TomsToolbox.Wpf.Styles.dll" />
+			</Component>
+			<Component Id="ResXManager.Infrastructure.dll" Guid="ab6773f8-cb85-4681-bfed-c2d9bff7b294">
+			  <File Id="ResXManager.Infrastructure.dll" Name="ResXManager.Infrastructure.dll" Source="$(var.ResXManager_TargetDir)ResXManager.Infrastructure.dll" />
+			</Component>
+			<Component Id="TomsToolbox.Wpf.Composition.dll" Guid="f1e037ef-b47f-4101-a81e-9028f377a4ee">
+			  <File Id="TomsToolbox.Wpf.Composition.dll" Name="TomsToolbox.Wpf.Composition.dll" Source="$(var.ResXManager_TargetDir)TomsToolbox.Wpf.Composition.dll" />
+			</Component>
+			<Component Id="TomsToolbox.Wpf.Composition.Styles.dll" Guid="288800f4-4abe-43b1-8490-2bb995b106da">
+			  <File Id="TomsToolbox.Wpf.Composition.Styles.dll" Name="TomsToolbox.Wpf.Composition.Styles.dll" Source="$(var.ResXManager_TargetDir)TomsToolbox.Wpf.Composition.Styles.dll" />
+			</Component>
+			<Component Id="ResXManager.Model.dll" Guid="2802d8a2-3dee-4839-9b3a-2797420b0245">
+			  <File Id="ResXManager.Model.dll" Name="ResXManager.Model.dll" Source="$(var.ResXManager_TargetDir)ResXManager.Model.dll" />
+			</Component>
+			<Component Id="System.Composition.AttributedModel.dll" Guid="a6f2c484-16ad-435f-91c6-26ef46b62535">
+			  <File Id="System.Composition.AttributedModel.dll" Name="System.Composition.AttributedModel.dll" Source="$(var.ResXManager_TargetDir)System.Composition.AttributedModel.dll" />
+			</Component>
+			<Component Id="TomsToolbox.Wpf.Composition.AttributedModel.dll" Guid="7fa36dc9-09a9-4c4f-af4f-a8b842629e68">
+			  <File Id="TomsToolbox.Wpf.Composition.AttributedModel.dll" Name="TomsToolbox.Wpf.Composition.AttributedModel.dll" Source="$(var.ResXManager_TargetDir)TomsToolbox.Wpf.Composition.AttributedModel.dll" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+	<Fragment>
+	  <ComponentGroup Id="de_files" Directory="de">
+	    <Component Id="de_ResXManager.resources.dll" Guid="fe088f01-5ad4-4103-9a9a-7dcb3394d725">
+	      <File Id="de_ResXManager.resources.dll" Name="ResXManager.resources.dll" Source="$(var.ResXManager_TargetDir)de\ResXManager.resources.dll" />
+	    </Component>
+	    <Component Id="de_ResXManager.Translators.resources.dll" Guid="13384f09-0911-445c-b129-8ade97ee2cd3">
+	      <File Id="de_ResXManager.Translators.resources.dll" Name="ResXManager.Translators.resources.dll" Source="$(var.ResXManager_TargetDir)de\ResXManager.Translators.resources.dll" />
+	    </Component>
+	    <Component Id="de_ResXManager.Model.resources.dll" Guid="2eedf245-eaa1-4066-95c7-00151e7b8c3c">
+	      <File Id="de_ResXManager.Model.resources.dll" Name="ResXManager.Model.resources.dll" Source="$(var.ResXManager_TargetDir)de\ResXManager.Model.resources.dll" />
+	    </Component>
+	    <Component Id="de_ResXManager.View.resources.dll" Guid="4fde8ea4-bd6e-4dae-ba2d-123779db9d83">
+	      <File Id="de_ResXManager.View.resources.dll" Name="ResXManager.View.resources.dll" Source="$(var.ResXManager_TargetDir)de\ResXManager.View.resources.dll" />
+	    </Component>
+	  </ComponentGroup>
+	</Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="zh_Hans_files" Directory="zh_Hans">
+      <Component Id="zh_Hans_ResXManager.Translators.resources.dll" Guid="cd88917d-dfb1-40a0-a38d-fd13d422688c">
+        <File Id="zh_Hans_ResXManager.Translators.resources.dll" Name="ResXManager.Translators.resources.dll" Source="$(var.ResXManager_TargetDir)zh-Hans\ResXManager.Translators.resources.dll" />
+      </Component>
+      <Component Id="zh_Hans_ResXManager.Model.resources.dll" Guid="542e162d-4857-41c2-b12b-fc4416946c0a">
+        <File Id="zh_Hans_ResXManager.Model.resources.dll" Name="ResXManager.Model.resources.dll" Source="$(var.ResXManager_TargetDir)zh-Hans\ResXManager.Model.resources.dll" />
+      </Component>
+      <Component Id="zh_Hans_ResXManager.View.resources.dll" Guid="fab07e8f-0863-474e-8153-ef297b649be2">
+        <File Id="zh_Hans_ResXManager.View.resources.dll" Name="ResXManager.View.resources.dll" Source="$(var.ResXManager_TargetDir)zh-Hans\ResXManager.View.resources.dll" />
+      </Component>
+      <Component Id="zh_Hans_ResXManager.resources.dll" Guid="821bd809-11f6-4948-a66f-54d3545bbbce">
+        <File Id="zh_Hans_ResXManager.resources.dll" Name="ResXManager.resources.dll" Source="$(var.ResXManager_TargetDir)zh-Hans\ResXManager.resources.dll" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

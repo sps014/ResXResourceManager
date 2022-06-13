@@ -10,6 +10,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
+    using System.Xml;
     using System.Xml.Serialization;
     using DataGridExtensions;
     using DocumentFormat.OpenXml;
@@ -417,7 +418,7 @@
             parts[1] = "<xliff>";
             text = string.Join("\n", parts);
             XmlSerializer serializer = new(typeof(XliffFile));
-            using StringReader reader = new(text);
+            using XmlReader reader = XmlReader.Create(new StringReader(text));
             var xliff = (XliffFile)serializer.Deserialize(reader);
             var projName = xliff.File.Original.Replace(".csproj", string.Empty);
             var resources = _resourceManager.TableEntries
