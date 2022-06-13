@@ -85,7 +85,7 @@
             DataGrid?.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
         }
 
-        private void ResourceManager_LanguageAdded(object sender, LanguageEventArgs e)
+        private void ResourceManager_LanguageAdded(object? sender, LanguageEventArgs e)
         {
             DataGrid.CreateNewLanguageColumn(_configuration, e.Language.Culture);
         }
