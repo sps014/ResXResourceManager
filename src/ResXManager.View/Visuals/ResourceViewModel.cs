@@ -494,6 +494,7 @@
                 _tracer.TraceError(ex.ToString());
             }
         }
+        private static bool LoadedSolutionOnce;
 
         public async Task ReloadAsync()
         {
@@ -509,8 +510,11 @@
                 using (_performanceTracer.Start("ResourceManager.Load"))
                 {
                     var args = Environment.GetCommandLineArgs();
-                    if (args.Length >= 2)
+                    if (args.Length >= 2 && !LoadedSolutionOnce)
+                    {
+                        LoadedSolutionOnce = true;
                         _sourceFilesProvider.SolutionFolder = args[1];
+                    }
                     var solutionFolder = _sourceFilesProvider.SolutionFolder;
 
                     var sourceFiles = await _sourceFilesProvider.GetSourceFilesAsync(cancellationToken).ConfigureAwait(true);
