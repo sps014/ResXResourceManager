@@ -10,6 +10,6 @@
     {
         Task<IList<ProjectFile>> GetSourceFilesAsync(CancellationToken? cancellationToken);
 
-        string? SolutionFolder { get; }
+        string? SolutionFolder { get; set; }
     }
 }

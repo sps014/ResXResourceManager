@@ -508,6 +508,9 @@
 
                 using (_performanceTracer.Start("ResourceManager.Load"))
                 {
+                    var args = Environment.GetCommandLineArgs();
+                    if (args.Length >= 2)
+                        _sourceFilesProvider.SolutionFolder = args[1];
                     var solutionFolder = _sourceFilesProvider.SolutionFolder;
 
                     var sourceFiles = await _sourceFilesProvider.GetSourceFilesAsync(cancellationToken).ConfigureAwait(true);
