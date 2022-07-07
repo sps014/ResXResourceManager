@@ -32,11 +32,12 @@ namespace ResX.Scripting
                     }
 
                     ///handle null case where we have our first entry
-                    if (!cached_values.ContainsKey(translated.Key))
+                    if ( translated.Key!=null && !cached_values.ContainsKey(translated.Key))
                         cached_values.Add(translated.Key, new HashSet<TranslateContainerModel>());
 
+                    if(translated.Key!=null)
                     //for given neutral value add row to hash set
-                    cached_values[translated.Key].Add(translated);
+                        cached_values[translated.Key].Add(translated);
 
                 }
             }
@@ -67,7 +68,9 @@ namespace ResX.Scripting
                             continue;
 
                         //if we dont have neutral translation skip
-                        if (!cached_values.ContainsKey(neutralVal))
+                        if (neutralVal is null)
+                            continue;
+                        if(!cached_values.ContainsKey(neutralVal))
                             continue;
                         var curLang = lang.Culture == null ? string.Empty : lang.Culture.Name;
                         //load value from other cacheed resources with same neutral value whose same lang translation is not null
