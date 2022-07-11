@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Text;
@@ -23,10 +24,14 @@
     {
         private readonly string _extension;
 
-        public MoveToResourceViewModel(IVsixCompatibility vsixCompatibility, ICollection<string> patterns, ICollection<ResourceEntity> resourceEntities, string text, string extension, string? className, string? functionName, string? fileName)
+        public MoveToResourceViewModel(IVsixCompatibility vsixCompatibility, ICollection<string> patterns, ICollection<ResourceEntity> resourceEntities, string text, string extension, string? className, string? functionName, string fileName)
         {
             ResourceEntities = resourceEntities;
-            SelectedResourceEntity = resourceEntities.FirstOrDefault();
+            var baseFileName = BaseFileName(fileName);
+            SelectedResourceEntity =
+                resourceEntities.FirstOrDefault(x => baseFileName.Equals(x.BaseName, StringComparison.OrdinalIgnoreCase))
+                ?? resourceEntities.FirstOrDefault(x => baseFileName.StartsWith(x.BaseName, StringComparison.OrdinalIgnoreCase))
+                ?? resourceEntities.FirstOrDefault();
 
             ExistingEntries = resourceEntities
                 .SelectMany(entity => entity.Entries)
@@ -41,6 +46,18 @@
             Keys = new[] { CreateKey(text, null, null), CreateKey(text, null, functionName), CreateKey(text, className ?? fileName, functionName) }.Distinct().ToArray();
             Key = Keys.Skip(SelectedKeyIndex).FirstOrDefault() ?? Keys.FirstOrDefault();
             Value = text;
+        }
+
+        private static string BaseFileName(string fileName)
+        {
+            while (true)
+            {
+                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+                if (fileName == fileNameWithoutExtension)
+                    return fileName;
+
+                fileName = fileNameWithoutExtension;
+            }
         }
 
         public ICollection<ResourceEntity> ResourceEntities { get; }
