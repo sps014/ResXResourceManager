@@ -1,4 +1,5 @@
 ﻿using ResXManager.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -42,9 +43,10 @@ namespace ResX.Scripting
                 }
             }
 
-
+            if (!Directory.Exists("C:\\resxbackup"))
+                Directory.CreateDirectory("C:\\resxbackup");
             //create snap
-            File.WriteAllText("backup.snapshot",manager.CreateSnapshot());
+            File.WriteAllText($"C:\\resxbackup\\backup_{DateTime.UtcNow.Ticks}.snapshot",manager.CreateSnapshot());
 
             foreach (var gp in entries)
             {
