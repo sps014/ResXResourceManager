@@ -154,7 +154,7 @@
             {
                 formatTemplates.Add(key);
 
-                var args = string.Join(", ", placeholders.Select(item => $@"{item}: string"));
+                var args = string.Join(", ", placeholders.Select(item => $@"{item}: string | number"));
                 typescript.AppendLine($"  private {key}{FormatTemplateSuffix} = {value};");
                 typescript.AppendLine($"  {key} = (args: {{ {args} }}) => {{\r\n    return formatString(this.{key}{FormatTemplateSuffix}, args);\r\n  }}");
             }
@@ -199,6 +199,7 @@ function formatString(template: string, args: any): string {
   return result;
 }
 
+// noinspection JSUnusedGlobalSymbols,SpellCheckingInspection
 ";
     }
 }
