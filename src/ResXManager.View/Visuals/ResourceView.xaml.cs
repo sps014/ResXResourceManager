@@ -351,7 +351,7 @@
             };
 
             file.File.Original = _resourceViewModel.ResourceManager.SolutionFolder;
-            file.File.Datatype = "resx";
+            file.File.Datatype = "sln";
             file.File.Sourcelanguage = "en";
             file.File.Targetlanguage = culturekey.Culture.Name;
             file.Version = "1.2";
@@ -385,8 +385,9 @@
                             Target = new Target
                             {
                                 State = "unknown",
-                                Text = culturalValue
-                            }
+                                Text = culturalValue,
+                            },
+                            Note = r.Comments.GetValue(culturekey.Culture)
                         };
                         resourceGroup.Transunits.Add(transUnit);
                     }
