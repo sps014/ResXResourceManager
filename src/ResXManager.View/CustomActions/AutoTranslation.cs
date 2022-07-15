@@ -8,10 +8,8 @@ namespace ResX.Scripting
 {
     public static class AutoTranslation
     {
-
         public static void Start(ResourceManager manager)
-        {
- 
+        { 
             //get all resource representation
             var entries = manager.TableEntries.GroupBy(x => x.Container);
             int count = 0;

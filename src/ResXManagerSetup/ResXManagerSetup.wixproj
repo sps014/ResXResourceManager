@@ -6,7 +6,7 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>c16a79c5-cb5a-4523-b957-47e6a9599565</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>ResXManagerSetup</OutputName>
+    <OutputName>ResXManager_Standalone_Setup</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
