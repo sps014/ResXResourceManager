@@ -341,9 +341,10 @@ using System.Xml.Linq;
 
         private void AutoTranslateBtn_Click(object sender, RoutedEventArgs e)
         {
-            Mouse.OverrideCursor = Cursors.Wait;
-            AutoTranslation.Start(_resourceViewModel.ResourceManager);
-            Mouse.OverrideCursor = Cursors.Arrow;
+            var win = new AutoTranslationWindow();
+            win.ResXManager = _resourceManager;
+            win.ShowDialog();
+           
         }
 
         private void XlifBtn_Click(object sender, RoutedEventArgs e)

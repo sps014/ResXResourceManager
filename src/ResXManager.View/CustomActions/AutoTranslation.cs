@@ -1,15 +1,18 @@
 ﻿using ResXManager.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ResX.Scripting
 {
     public static class AutoTranslation
     {
-        public static void Start(ResourceManager manager)
-        { 
+        public static async void Start(ResourceManager manager)
+        {
             //get all resource representation
             var entries = manager.TableEntries.GroupBy(x => x.Container);
             int count = 0;
@@ -38,6 +41,11 @@ namespace ResX.Scripting
                     //for given neutral value add row to hash set
                         cached_values[translated.Key].Add(translated);
 
+
+                    OnProgress?.Invoke(new ProgressEventArg
+                    {
+                        EventType = EventType.CacheBuildUp,
+                    });
                 }
             }
 
@@ -70,21 +78,37 @@ namespace ResX.Scripting
                         //if we dont have neutral translation skip
                         if (neutralVal is null)
                             continue;
-                        if(!cached_values.ContainsKey(neutralVal))
+                        if (!cached_values.ContainsKey(neutralVal))
                             continue;
                         var curLang = lang.Culture == null ? string.Empty : lang.Culture.Name;
-                        //load value from other cacheed resources with same neutral value whose same lang translation is not null
-                        var value = cached_values[neutralVal]
-                            .FirstOrDefault(x =>
-                            x.CultureValues.
-                            ContainsKey(curLang) 
-                            && !string.IsNullOrEmpty(x.CultureValues[curLang]));
+
+                        var values = cached_values[neutralVal]
+                            .Where(x => x.CultureValues.ContainsKey(curLang)
+                            && !string.IsNullOrEmpty(x.CultureValues[curLang])).ToImmutableArray();
+
+                        if (!values.Any())
+                            continue;
+
+                        var res = await OnTranslationAction?.Invoke(new RequireActionEventArg
+                        {
+                            Key = resourceEntry.Key,
+                            ProjectName = resourceEntry.Container.ProjectName,
+                            UniqueName = resourceEntry.Container.UniqueName,
+                            Values = values,
+                            Culture = curLang,
+                            NeutralText = neutralVal
+                        });
+                        if (!res.Merge)
+                            continue;
+
+                        //load value from other cached resources with same neutral value whose same lang translation is not null
+                        var value = values[res.Index];
 
                         //if we dont have such translation then continue
                         if (value == null)
                             continue;
 
-                        //update the resouece file
+                        //update the resource file
                         resourceEntry.Values.SetValue(lang.Culture, value[lang.Culture.Name]);
                         resourceEntry.Comments.SetValue(lang.Culture, "@autotranslated");
 
@@ -96,5 +120,34 @@ namespace ResX.Scripting
             //save changes in resource
             manager.Save();
         }
+        public delegate void OnProgressHandler(ProgressEventArg e);
+        public static event OnProgressHandler? OnProgress;
+
+        public delegate Task<RequireActionResult> OnRequireActionHandler(RequireActionEventArg e);
+        public static event OnRequireActionHandler? OnTranslationAction;
+    }
+
+    public class ProgressEventArg
+    {
+        public EventType EventType { get; set; }
+        public int CachedItemCount { get; set; }
+    }
+    public class RequireActionEventArg
+    {
+        public string Key { get; set; }
+        public string UniqueName { get; set; }
+        public string ProjectName { get; set; }
+        public IReadOnlyList<TranslateContainerModel> Values { get; set; }
+        public string Culture { get; internal set; }
+        public string NeutralText { get; set; }
+    }
+    public struct RequireActionResult
+    {
+        public bool Merge { get; set; }
+        public int Index { get; set; }
+    }
+    public enum EventType
+    {
+        CacheBuildUp
     }
 }
