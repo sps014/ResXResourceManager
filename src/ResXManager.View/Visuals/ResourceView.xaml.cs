@@ -10,6 +10,7 @@
     using System.Windows.Controls;
     using System.Windows.Input;
     using System.Xml;
+using System.Xml.Linq;
     using System.Xml.Serialization;
     using DataGridExtensions;
     using DocumentFormat.OpenXml;
@@ -27,6 +28,7 @@
     using TomsToolbox.Wpf.Composition;
     using TomsToolbox.Wpf.Composition.AttributedModel;
     using TomsToolbox.Wpf.Converters;
+    using File = System.IO.File;
 
     /// <summary>
     /// Interaction logic for ResourceView.xaml
@@ -257,6 +259,19 @@
 
         private void Diff_Click(object sender, RoutedEventArgs e)
         {
+            var folder = _resourceManager.SolutionFolder;
+            int maxDepth = 4;
+            while (maxDepth>0 && folder.Length>4 &&
+                !File.Exists($"{folder}\\Localization\\Localization_Full.snapshot"))
+            {
+                folder = new DirectoryInfo(folder).Parent.FullName;
+                maxDepth--;
+            }
+            var file = $"{folder}\\Localization\\Localization_Full.snapshot";
+            while (!File.Exists(file))
+            {
+                file = $"{new DirectoryInfo(_resourceManager.SolutionFolder)}";
+            }
             OpenFileDialog openFileDialog = new()
             {
                 Title = "Import Snapshot file",
@@ -265,8 +280,11 @@
             };
             if (!showDiff && openFileDialog.ShowDialog().GetValueOrDefault())
             {
-                _resourceManager.LoadSnapshot(System.IO.File.ReadAllText(openFileDialog.FileName));
+                file = openFileDialog.FileName;
             }
+
+            _resourceManager.LoadSnapshot(File.ReadAllText(file));
+
             Perform();
 
         }
@@ -337,7 +355,7 @@
             foreach (var v in _resourceManager.Cultures)
             {
                 if (v.IsNeutral) continue;
-                var child = new MenuItem() { Header = v.Culture.Name };
+                var child = new MenuItem() { Header = v.Culture!.Name };
                 child.Click += (_, _) => ExportXliff(v);
                 exportXlifMenu.Items.Add(child);
             }
@@ -350,10 +368,10 @@
                 File = new Model.XLif.File()
             };
 
-            file.File.Original = _resourceViewModel.ResourceManager.SolutionFolder;
+            file.File.Original = _resourceViewModel.ResourceManager.SolutionFolder!;
             file.File.Datatype = "sln";
             file.File.Sourcelanguage = "en";
-            file.File.Targetlanguage = culturekey.Culture.Name;
+            file.File.Targetlanguage = culturekey.Culture!.Name;
             file.Version = "1.2";
             file.File.Body = new Body();
 
@@ -381,13 +399,13 @@
                         var transUnit = new Transunit
                         {
                             Id = key,
-                            Source = neutralValue,
+                            Source = neutralValue!,
                             Target = new Target
                             {
-                                State = "unknown",
-                                Text = culturalValue,
+                                State = status,
+                                Text = culturalValue!,
                             },
-                            Note = r.Comments.GetValue(culturekey.Culture)
+                            Note = r.Comments.GetValue(culturekey.Culture)!
                         };
                         resourceGroup.Transunits.Add(transUnit);
                     }
@@ -402,7 +420,7 @@
 
             SaveFileDialog sfd = new()
             {
-                Filter = "XLIF files|*.xlf"
+                Filter = "XLF file|*.xlf|XLIFF file|*.xliff"
             };
 
             if (sfd.ShowDialog().GetValueOrDefault())
@@ -416,7 +434,7 @@
         {
             OpenFileDialog sfd = new()
             {
-                Filter = "XLIF files|*.xlf"
+                Filter = "XLF file|*.xlf|XLIFF file|*.xliff"
             };
 
             if (sfd.ShowDialog().GetValueOrDefault())
@@ -426,30 +444,73 @@
         }
         private void ImportXlif(string text)
         {
-            var parts = text.Split('\n');
-            parts[1] = "<xliff>";
-            text = string.Join("\n", parts);
             XmlSerializer serializer = new(typeof(Xliff));
             using XmlReader reader = XmlReader.Create(new StringReader(text));
             var xliff = (Xliff)serializer.Deserialize(reader);
-            var projName = xliff.File.Original.Replace(".csproj", string.Empty);
-            var resources = _resourceManager.TableEntries
-                .Where(y => y.Container.ProjectName == projName);
 
-            if (resources == null)
-                return;
+            //if (MessageBox.Show("Do you want to create a backup snapshot of current resources"
+            //    , "Snapshot backup", MessageBoxButton.YesNo, MessageBoxImage.Hand) == MessageBoxResult.Yes)
+            //{
+            //    //TODO backup
+            //}
 
-            foreach (var gp in xliff.File.Body.Group)
+            foreach (var project in xliff.File.Body.Group)
             {
-                foreach (var tunit in gp.Transunits)
+                foreach (var resource in project.Groups)
                 {
-                    var r = resources.First(x => x.Key == tunit.Id);
-                    r.Values.SetValue(xliff.File.Targetlanguage, tunit.Target.Text);
-                    r.Comments.SetValue(xliff.File.Targetlanguage, tunit.Target.State);
+                    foreach (var trans in resource.Transunits)
+                    {
+                        var item =_resourceManager.TableEntries.FirstOrDefault(x => x.Key == trans.Id);
+                        if (item == null)
+                        {
+                            MessageBox.Show($"not found Key: {trans.Id} in {resource.Id}.resx of {project.Id}", "Error");
+                            return;
+                        }
+
+                        item.Values.SetValue(xliff.File.Targetlanguage, trans.Target.Text);
+                        item.Comments.SetValue(xliff.File.Targetlanguage, trans.Target.State);
+
+                        
+                    }
+
                 }
             }
             _resourceManager.Save();
 
+            //foreach (var gp in xliff.File.Body.Group)
+            //{
+            //    foreach (var tunit in gp.Transunits)
+            //    {
+            //        var r = resources.First(x => x.Key == tunit.Id);
+            //        r.Values.SetValue(xliff.File.Targetlanguage, tunit.Target.Text);
+            //        r.Comments.SetValue(xliff.File.Targetlanguage, tunit.Target.State);
+            //    }
+            //}
+            //_resourceManager.Save();
+
+        }
+
+        private static string? ProjectAssemblyName(string path)
+        {
+            XNamespace msbuild = "http://schemas.microsoft.com/developer/msbuild/2003";
+            XDocument projDefinition = XDocument.Load(path);
+
+            var proj = projDefinition.Element(msbuild + "Project");
+
+            if (proj is null)
+                return null;
+
+            var property = proj.Element(msbuild + "PropertyGroup");
+
+            if (property is null)
+                return null;
+
+            var assembly = property.Element(msbuild + "AssemblyName");
+
+            if (assembly is null)
+                return null;
+
+            return assembly.Value;
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
+using static System.Net.WebRequestMethods;
 
 namespace ResXManager.Model.XLif
 {
@@ -100,9 +101,9 @@ namespace ResXManager.Model.XLif
         [XmlAttribute(AttributeName = "xsi", Namespace = "http://www.w3.org/2000/xmlns/")]
         public string Xsi { get; set; }
         [XmlAttribute(AttributeName = "schemaLocation", Namespace = "http://www.w3.org/2001/XMLSchema-instance")]
-        public string SchemaLocation { get; set; }
+        public string SchemaLocation { get; set; } = "urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd";
         [XmlAttribute(AttributeName = "sl", Namespace = "http://www.w3.org/2000/xmlns/")]
-        public string Sl { get; set; }
+        public string Sl { get; set; } = "http://www.sisulizer.com";
     }
 
 }
