@@ -453,24 +453,30 @@ using System.Xml.Linq;
             //{
             //    //TODO backup
             //}
+            var cul = _resourceManager.Cultures;
+            var curCul = cul.First(x => !x.IsNeutral && x.Culture?.Name == xliff.File.Targetlanguage);
 
             foreach (var project in xliff.File.Body.Group)
             {
+                var projectRes = _resourceManager.TableEntries.Where(x => x.Container.ProjectName == project.Id);
+
                 foreach (var resource in project.Groups)
                 {
+                    var Res = projectRes.Where(x => x.Container.UniqueName == resource.Id);
+
                     foreach (var trans in resource.Transunits)
                     {
-                        var item =_resourceManager.TableEntries.FirstOrDefault(x => x.Key == trans.Id);
+                        var item = Res.FirstOrDefault(x => x.Key == trans.Id);
                         if (item == null)
                         {
                             MessageBox.Show($"not found Key: {trans.Id} in {resource.Id}.resx of {project.Id}", "Error");
                             return;
                         }
-
-                        item.Values.SetValue(xliff.File.Targetlanguage, trans.Target.Text);
-                        item.Comments.SetValue(xliff.File.Targetlanguage, trans.Target.State);
-
-                        
+                        var r = item.Languages;
+                        if (!r.Contains(curCul))
+                            continue;
+                        item.Values.SetValue(curCul.Culture, trans.Target.Text);
+                        item.Comments.SetValue(curCul.Culture, trans.Target.State);
                     }
 
                 }
@@ -490,28 +496,6 @@ using System.Xml.Linq;
 
         }
 
-        private static string? ProjectAssemblyName(string path)
-        {
-            XNamespace msbuild = "http://schemas.microsoft.com/developer/msbuild/2003";
-            XDocument projDefinition = XDocument.Load(path);
-
-            var proj = projDefinition.Element(msbuild + "Project");
-
-            if (proj is null)
-                return null;
-
-            var property = proj.Element(msbuild + "PropertyGroup");
-
-            if (property is null)
-                return null;
-
-            var assembly = property.Element(msbuild + "AssemblyName");
-
-            if (assembly is null)
-                return null;
-
-            return assembly.Value;
-        }
     }
 
 }
