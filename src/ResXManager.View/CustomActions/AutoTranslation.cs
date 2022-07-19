@@ -23,9 +23,13 @@ namespace ResX.Scripting
                 foreach (var resourceEntry in gp)
                 {
                     //get key with all its text and lang
-                    var translated = new TranslateContainerModel();
-                    //our key is neutral values
-                    translated.Key = resourceEntry.Values.GetValue(resourceEntry.NeutralLanguage.Culture);
+                    var translated = new TranslateContainerModel
+                    {
+                        //our key is neutral values
+                        Key = resourceEntry.Values.GetValue(resourceEntry.NeutralLanguage.Culture),
+                        ProjectName = resourceEntry.Container.ProjectName,
+                        UniqueName = resourceEntry.Container.UniqueName
+                    };
                     foreach (var lang in resourceEntry.Languages)
                     {
                         var langStr = lang.Culture == null ? string.Empty : lang.Culture.Name;// handle neural case with no culture
@@ -64,9 +68,18 @@ namespace ResX.Scripting
                     var neutralVal = resourceEntry.Values.GetValue(neutralLang);
                     foreach (var lang in resourceEntry.Languages)
                     {
+
+
                         //skip neural lang
                         if (lang == neutralLang)
                             continue;
+                        ////delete auto trans values
+                        //if (resourceEntry.Comments.GetValue(lang.Culture) == "@autotranslated")
+                        //{
+                        //    resourceEntry.SetCommentText(lang.Culture, string.Empty);
+                        //    resourceEntry.Values.SetValue(lang.Culture, string.Empty);
+                        //}
+
 
                         //get current value of resource
                         var val = resourceEntry.Values.GetValue(lang.Culture);

@@ -15,5 +15,7 @@ namespace ResX.Scripting
         //map of lang,value
         public Dictionary<string,string> CultureValues { get; } = new Dictionary<string, string>();
         public string Key { get; set; }
+        public string UniqueName { get; set; }
+        public string ProjectName { get; set; }
     }
 }

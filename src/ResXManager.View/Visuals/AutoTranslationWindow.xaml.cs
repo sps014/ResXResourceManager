@@ -45,7 +45,15 @@ namespace ResXManager.View.Visuals
             nameLabel.Content = e.NeutralText;
             foreach (var c in e.Values)
             {
-                choiceGrid.Items.Add(new Label() { Content = c.CultureValues[e.Culture] });
+                var stackPnl = new StackPanel()
+                {
+                    Orientation = Orientation.Horizontal
+                };
+                stackPnl.Children.Add(new Label() { Content = c.CultureValues[e.Culture] });
+                stackPnl.Children.Add(new Label() { Content = c.ProjectName });
+                stackPnl.Children.Add(new Label() { Content = c.UniqueName });
+
+                choiceGrid.Items.Add(stackPnl);
             }
 
             while (decisionDone == DecisionResult.Pending)

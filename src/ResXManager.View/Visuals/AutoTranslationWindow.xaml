@@ -44,16 +44,22 @@
         <GroupBox Margin="0 20 0 0">
           <GroupBox.Header>Select Auto Translation Source Value</GroupBox.Header>
         </GroupBox>
-
-        <ListBox 
-                x:Name="choiceGrid" HorizontalAlignment="Stretch"
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+          </Grid.RowDefinitions>
+          <ListBox
+                ScrollViewer.VerticalScrollBarVisibility="Visible"
+                x:Name="choiceGrid" HorizontalAlignment="Stretch" MaxHeight="400" Height="400"
                 VerticalAlignment="Stretch">
 
-        </ListBox>
-        <StackPanel Orientation="Horizontal">
-          <Button x:Name="SelectBtn" Click="SelectBtn_Click">Use Selection</Button>
-          <Button x:Name="DiscardBtn" Click="DiscardBtn_Click">Discard Auto Translation</Button>
-        </StackPanel>
+          </ListBox>
+          <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Button x:Name="SelectBtn" Click="SelectBtn_Click" HorizontalAlignment="Left">Use Selection</Button>
+            <Button x:Name="DiscardBtn" Click="DiscardBtn_Click" HorizontalAlignment="Right">Discard Auto Translation</Button>
+          </StackPanel>
+        </Grid>
       </StackPanel>
     </Grid>
     <StatusBar Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
