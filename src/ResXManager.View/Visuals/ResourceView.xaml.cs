@@ -19,6 +19,7 @@ using System.Xml.Linq;
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.Model.XLif;
+using ResXManager.View.Behaviors;
     using ResXManager.View.Tools;
 
     using TomsToolbox.Composition;
@@ -61,12 +62,24 @@ using System.Xml.Linq;
                 InitializeComponent();
 
                 DataGrid?.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
+                DataGridTryBeginEditBehavior.OnEditEnded += DataGridTryBeginEditBehavior_OnEditEnded;
+
             }
             catch (Exception ex)
             {
                 exportProvider.TraceXamlLoaderError(ex);
             }
         }
+
+        private void DataGridTryBeginEditBehavior_OnEditEnded(object sender, CustomEditCommitArgs e)
+        {
+            if (e.PreviousValue == e.CurrentValue)
+                return;
+            MessageBox.Show($"Value `{e.CurrentValue}` from `{e.PreviousValue}` modified ");
+            //built a cache for given culture
+            //find resources with similiar name
+        }
+
 
         private void ResourceViewModel_ClearFiltersRequest(object? sender, ResourceTableEntryEventArgs e)
         {

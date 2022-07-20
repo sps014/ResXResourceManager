@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ResXManager.View.Visuals" Title="Auto Translation Wizard"
-        mc:Ignorable="d" Height="450" Width="800">
+        mc:Ignorable="d" Height="450" Width="800" WindowStyle="ToolWindow">
   <Grid>
     <Grid>
       <Grid.RowDefinitions>
@@ -14,7 +14,7 @@
       </Grid.RowDefinitions>
       <Button Margin="0 10 0 0" HorizontalAlignment="Left"
               x:Name="startBtn"
-              Click="startBtn_Click">Perform Auto Translation</Button>
+              Click="startBtn_Click">Analyze</Button>
       <StackPanel Orientation="Vertical" Margin="0 24 0 0" Grid.Row="1"  Grid.RowSpan="2" x:Name="selectPanel">
         <GroupBox>
           <GroupBox.Header>Resolve Auto Translation Conflict</GroupBox.Header>
