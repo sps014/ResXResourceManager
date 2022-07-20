@@ -6,6 +6,7 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -30,6 +31,7 @@ using ResXManager.View.Behaviors;
     using TomsToolbox.Wpf.Composition.AttributedModel;
     using TomsToolbox.Wpf.Converters;
     using File = System.IO.File;
+    using Group = Model.XLif.Group;
 
     /// <summary>
     /// Interaction logic for ResourceView.xaml
@@ -75,11 +77,54 @@ using ResXManager.View.Behaviors;
         {
             if (e.PreviousValue == e.CurrentValue)
                 return;
-            MessageBox.Show($"Value `{e.CurrentValue}` from `{e.PreviousValue}` modified ");
-            //built a cache for given culture
-            //find resources with similiar name
+
+            var match = Regex.Match(e.ColumnName, @"\[\.(.*)\]");
+
+            if (!match.Success)
+                return;
+
+            var culture = match.Groups[1].Value;
+
+            //built a cache for given culture text
+
+            var cache = BuildCache(e.PreviousValue, culture,
+                e.Entry.Container.ProjectName,
+                e.Entry.Container.UniqueName);
+
+            if (!cache.Any())
+                return;
+            var str = "";
+
+            foreach (var item in cache)
+            {
+                var entry = item.Entry;
+                str += $"{item.Key} -- {item.UniqueName} -- {item.ProjectName}\n";
+            }
+            MessageBox.Show(str);
         }
 
+        private HashSet<TranslateContainerModel> BuildCache(string text, string culture,string projectName,string resourceName)
+        {
+            var result = new HashSet<TranslateContainerModel>();
+
+            foreach (var e in _resourceManager.TableEntries)
+            {
+                var value = e.Values.GetValue(culture);
+                if (text != value || (resourceName == e.Container.UniqueName
+                    && projectName == e.Container.ProjectName))
+                    continue;
+
+                result.Add(new TranslateContainerModel()
+                {
+                    Key = e.Key,
+                    ProjectName = e.Container.ProjectName,
+                    UniqueName = e.Container.UniqueName,
+                    Entry = e
+                });
+            }
+
+            return result;
+        }
 
         private void ResourceViewModel_ClearFiltersRequest(object? sender, ResourceTableEntryEventArgs e)
         {

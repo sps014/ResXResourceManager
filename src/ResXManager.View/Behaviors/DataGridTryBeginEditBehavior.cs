@@ -32,16 +32,16 @@
             var expr = (BindingExpression)bindingGroup;
             var resourceEntry = expr.DataItem as ResourceTableEntry;
 
-            var columnName =expr.ResolvedSourcePropertyName;
+            var columnName = expr.ResolvedSourcePropertyName;
             if (columnName == "Key")
                 return;
 
             OnEditEnded?.Invoke(sender, new CustomEditCommitArgs()
             {
                 ColumnName = columnName,
-                CurrentValue=(expr.Target as TextBox).Text,
-                Entry=resourceEntry,
-                PreviousValue=previousValueSelectedCell
+                CurrentValue = (expr.Target as TextBox).Text,
+                Entry = resourceEntry,
+                PreviousValue = previousValueSelectedCell
             });
         }
 
