@@ -93,6 +93,7 @@
         public ResourceTableEntry Entry { get; set; }
         public string PreviousValue { get; set; }
         public string CurrentValue { get; set; }
+        public string? Culture { get; internal set; }
     }
 
 }

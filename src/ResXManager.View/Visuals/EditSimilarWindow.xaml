@@ -10,15 +10,15 @@
     <Grid>
 
     <Grid.RowDefinitions>
-      <RowDefinition Height="400"/>
       <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
-    <ListBox x:Name="ItemsList" Height="450" SelectionMode="Extended">
+    <ListBox x:Name="ItemsList" SelectionMode="Extended">
 
     </ListBox>
-    <StackPanel Grid.Row="1" Orientation="Horizontal">
-      <Button HorizontalAlignment="Left">Confirm Changes</Button>
-      <Button Margin="450 0 0 0">Cancel</Button>
+    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Stretch">
+      <Button HorizontalAlignment="Left" x:Name="ConfirmBtn" Click="ConfirmBtn_Click">Confirm Changes</Button>
+      <Button Margin="550 0 0 0" x:Name="SelectAllBtn" Click="SelectAllBtn_Click">Select All</Button>
     </StackPanel>
   </Grid>
 </Window>

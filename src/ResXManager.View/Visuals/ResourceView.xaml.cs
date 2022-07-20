@@ -85,6 +85,8 @@ using ResXManager.View.Behaviors;
 
             var culture = match.Groups[1].Value;
 
+            e.Culture = culture;
+
             //built a cache for given culture text
 
             var cache = BuildCache(e.PreviousValue, culture,
