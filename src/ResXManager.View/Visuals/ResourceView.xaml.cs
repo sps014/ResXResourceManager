@@ -93,14 +93,20 @@ using ResXManager.View.Behaviors;
 
             if (!cache.Any())
                 return;
-            var str = "";
 
-            foreach (var item in cache)
+            if (MessageBox
+                .Show($"Previous Value `{e.PreviousValue}` is used at {cache.Count} times, Do you want to modify them also?",
+                "Edit Similar Items", MessageBoxButton.YesNo, MessageBoxImage.Information)
+                == MessageBoxResult.Yes)
             {
-                var entry = item.Entry;
-                str += $"{item.Key} -- {item.UniqueName} -- {item.ProjectName}\n";
+
             }
-            MessageBox.Show(str);
+
+            var window = new EditSimilarWindow();
+            window.ResourceManager = _resourceManager;
+            window.Cache = cache;
+
+            window.ShowDialog();
         }
 
         private HashSet<TranslateContainerModel> BuildCache(string text, string culture,string projectName,string resourceName)
