@@ -4,9 +4,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ResXManager.View.Visuals"
-        mc:Ignorable="d"
-        Title="EditSimilarWindow" Height="450" Width="800">
+        mc:Ignorable="d" WindowStyle="ToolWindow" ResizeMode="NoResize" 
+        Title="EditSimilarWindow" Height="450" Width="800" Loaded="Window_Loaded">
+  
     <Grid>
-        
-    </Grid>
+
+    <Grid.RowDefinitions>
+      <RowDefinition Height="400"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <ListBox x:Name="ItemsList" Height="450" SelectionMode="Extended">
+
+    </ListBox>
+    <StackPanel Grid.Row="1" Orientation="Horizontal">
+      <Button HorizontalAlignment="Left">Confirm Changes</Button>
+      <Button Margin="450 0 0 0">Cancel</Button>
+    </StackPanel>
+  </Grid>
 </Window>

@@ -95,7 +95,7 @@ using ResXManager.View.Behaviors;
                 return;
 
             if (MessageBox
-                .Show($"Previous Value `{e.PreviousValue}` is used at {cache.Count} times, Do you want to modify them also?",
+                .Show($"Previous Value \"{e.PreviousValue}\" occurs {cache.Count} times at other places, Do you want to modify them also?",
                 "Edit Similar Items", MessageBoxButton.YesNo, MessageBoxImage.Information)
                 == MessageBoxResult.Yes)
             {
@@ -105,7 +105,7 @@ using ResXManager.View.Behaviors;
             var window = new EditSimilarWindow();
             window.ResourceManager = _resourceManager;
             window.Cache = cache;
-
+            window.CustomEditEventArgs = e;
             window.ShowDialog();
         }
 
