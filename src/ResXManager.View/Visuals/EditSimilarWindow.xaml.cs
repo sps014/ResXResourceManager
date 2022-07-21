@@ -75,8 +75,10 @@ namespace ResXManager.View.Visuals
                     continue;
                 cachedItems[i].Entry.Values.SetValue(CustomEditEventArgs.Culture, CustomEditEventArgs.CurrentValue);
             }
-
+            
             ResourceManager.Save();
+
+            Close();
         }
 
         private void SelectAllBtn_Click(object sender, RoutedEventArgs e)

@@ -1,4 +1,5 @@
-﻿using ResX.Scripting;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using ResX.Scripting;
 using ResXManager.Model;
 using System;
 using System.Collections.Generic;
@@ -26,8 +27,14 @@ namespace ResXManager.View.Visuals
             InitializeComponent();
             AutoTranslation.OnProgress += AutoTranslation_OnProgress;
             AutoTranslation.OnTranslationAction += AutoTranslation_OnTranslationAction;
+            AutoTranslation.OnFinished += AutoTranslation_OnFinished;
             selectPanel.Visibility = Visibility.Collapsed;
 
+        }
+
+        private void AutoTranslation_OnFinished()
+        {
+            Close();
         }
 
         private DecisionResult decisionDone;
@@ -74,7 +81,10 @@ namespace ResXManager.View.Visuals
         ~AutoTranslationWindow()
         {
             AutoTranslation.OnProgress -= AutoTranslation_OnProgress;
+            AutoTranslation.OnFinished -= AutoTranslation_OnFinished;
         }
+
+
 
         private void AutoTranslation_OnProgress(ProgressEventArg e)
         {
@@ -85,15 +95,6 @@ namespace ResXManager.View.Visuals
         }
 
         public ResourceManager ResXManager { get; internal set; }
-
-        private void startBtn_Click(object sender, RoutedEventArgs e)
-        {
-            AutoTranslation.Start(ResXManager);
-            //progressBar.Visibility = Visibility.Visible;
-            //progressBar.Maximum = ResXManager.TableEntries.Count;
-            statusText.Foreground = new SolidColorBrush(Colors.Black);
-            statusText.Content = $"Building up cache of size {ResXManager.TableEntries.Count}";
-        }
 
         private void SelectBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -114,6 +115,11 @@ namespace ResXManager.View.Visuals
             Pending,
             Accepted,
             Discarded
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            AutoTranslation.Start(ResXManager);
         }
     }
 }

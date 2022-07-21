@@ -99,9 +99,9 @@ using ResXManager.View.Behaviors;
             if (MessageBox
                 .Show($"Previous Value \"{e.PreviousValue}\" occurs {cache.Count} times at other places, Do you want to modify them also?",
                 "Edit Similar Items", MessageBoxButton.YesNo, MessageBoxImage.Information)
-                == MessageBoxResult.Yes)
+                != MessageBoxResult.Yes)
             {
-
+                return;
             }
 
             var window = new EditSimilarWindow();

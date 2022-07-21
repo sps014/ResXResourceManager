@@ -132,9 +132,14 @@ namespace ResX.Scripting
 
             //save changes in resource
             manager.Save();
+
+            OnFinished?.Invoke();
         }
         public delegate void OnProgressHandler(ProgressEventArg e);
         public static event OnProgressHandler? OnProgress;
+
+        public delegate void OnFinishedHandler();
+        public static event OnFinishedHandler? OnFinished;
 
         public delegate Task<RequireActionResult> OnRequireActionHandler(RequireActionEventArg e);
         public static event OnRequireActionHandler? OnTranslationAction;
