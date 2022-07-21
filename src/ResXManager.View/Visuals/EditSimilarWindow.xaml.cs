@@ -30,13 +30,13 @@ namespace ResXManager.View.Visuals
         public ResourceManager ResourceManager { get; internal set; }
         public HashSet<TranslateContainerModel> Cache { get; internal set; }
         public CustomEditCommitArgs CustomEditEventArgs { get;internal set; }
-        private CheckBox[] CheckBoxes;
+        private TargetItem[] targetItems;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             if (!Cache.Any())
                 return;
 
-            CheckBoxes = new CheckBox[Cache.Count];
+            targetItems = new TargetItem[Cache.Count];
 
             if (!Title.Contains(CustomEditEventArgs.PreviousValue))
                 Title = $"Edit From `{CustomEditEventArgs.PreviousValue}` To `{CustomEditEventArgs.CurrentValue}`";
@@ -45,22 +45,20 @@ namespace ResXManager.View.Visuals
             int i = 0;
             foreach (var item in Cache)
             {
-                var stackPanel = new StackPanel()
-                {
-                    Orientation = Orientation.Horizontal
-                };
-                var checkBox = new CheckBox() { Margin = new Thickness(10, 0, 0, 0) };
+                var ec = CustomEditEventArgs;
 
-                CheckBoxes[i] = checkBox;
-
-                var label = new TextBlock
+                var itemz = new TargetItem
                 {
-                    Text = $"\"{CustomEditEventArgs.PreviousValue}\" --> \"{item.UniqueName}\" resource  --> \"{item.ProjectName}\" project"
+                    Key = ec.Entry.Key,
+                    Modify = false,
+                    ProjectName = ec.Entry.Container.ProjectName,
+                    ResourceName = ec.Entry.Container.UniqueName,
+                    PreviousValue = ec.PreviousValue
                 };
 
-                stackPanel.Children.Add(checkBox);
-                stackPanel.Children.Add(label);
-                ItemsList.Items.Add(stackPanel);
+                targetItems[i] = itemz;
+
+                ItemsList.Items.Add(itemz);
                 i++;
             }
         }
@@ -69,13 +67,13 @@ namespace ResXManager.View.Visuals
         {
             var cachedItems = Cache.ToList();
 
-            for (int i = 0; i < CheckBoxes.Length; i++)
+            for (int i = 0; i < targetItems.Length; i++)
             {
-                if (!CheckBoxes[i].IsChecked.Value)
+                if (!targetItems[i].Modify)
                     continue;
+
                 cachedItems[i].Entry.Values.SetValue(CustomEditEventArgs.Culture, CustomEditEventArgs.CurrentValue);
             }
-            
             ResourceManager.Save();
 
             Close();
@@ -83,10 +81,33 @@ namespace ResXManager.View.Visuals
 
         private void SelectAllBtn_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var item in CheckBoxes)
+            ItemsList.Items.Clear();
+            foreach (var item in targetItems)
             {
-                item.IsChecked = true;
+                item.Modify = true;
+                ItemsList.Items.Add(item);
             }
+        }
+        private class TargetItem
+        {
+            public bool Modify { get; set; }
+            public string Key { get; set; }
+            public string ResourceName { get; set; }
+            public string ProjectName { get; set; }
+            public string PreviousValue { get; internal set; }
+        }
+
+        private void ItemsList_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (ItemsList.SelectedIndex < 0)
+                return;
+
+            ItemsList.Items.Clear();
+            TargetItem item = targetItems[ItemsList.SelectedIndex];
+            item.Modify = !item.Modify;
+
+            foreach (var v in targetItems)
+                ItemsList.Items.Add(v);
         }
     }
 }

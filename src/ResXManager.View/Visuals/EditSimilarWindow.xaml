@@ -13,11 +13,43 @@
       <RowDefinition Height="*"/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
-    <DataGrid x:Name="ItemsList" SelectionMode="Single">
-      <DataGrid.Columns>
-        <DataGridTextColumn Header="Key" Width="*" />
-      </DataGrid.Columns>
-    </DataGrid>
+
+    <ListView x:Name="ItemsList">
+      <ListView.ItemContainerStyle>
+        <Style TargetType="{x:Type ListViewItem}">
+          <Setter Property="BorderBrush" Value="LightGray" />
+          <Setter Property="BorderThickness" Value="0,0,0,1" />
+          <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+          <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+              <Setter Property="Background" Value="DodgerBlue" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter Property="Background" Value="DodgerBlue" />
+            </Trigger>
+          </Style.Triggers>
+        </Style>
+        
+      </ListView.ItemContainerStyle>
+      <ListView.View>
+        <GridView>
+          <GridView.Columns>
+            <GridViewColumn  Header="Modify Status" Width="80">
+              <GridViewColumn.CellTemplate>
+                <DataTemplate>
+                  <CheckBox IsChecked="{Binding Modify}"  Cursor="Hand" />
+                </DataTemplate>
+              </GridViewColumn.CellTemplate>
+            </GridViewColumn>
+            <GridViewColumn  Header="Previous Value" DisplayMemberBinding="{Binding PreviousValue}" Width="123"/>
+            <GridViewColumn  Header="Key" DisplayMemberBinding="{Binding Key}" Width="200"/>
+            <GridViewColumn  Header="Resource Name" DisplayMemberBinding="{Binding ResourceName}" Width="180"/>
+            <GridViewColumn  Header="Project Name" DisplayMemberBinding="{Binding ProjectName}" Width="180"/>
+          </GridView.Columns>
+        </GridView>
+      </ListView.View>
+    </ListView>
+
     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Stretch">
       <Button HorizontalAlignment="Left" x:Name="ConfirmBtn" Click="ConfirmBtn_Click">Confirm Changes</Button>
       <Button Margin="550 0 0 0" x:Name="SelectAllBtn" Click="SelectAllBtn_Click">Select All</Button>

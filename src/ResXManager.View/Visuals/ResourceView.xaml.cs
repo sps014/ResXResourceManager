@@ -75,6 +75,11 @@ using ResXManager.View.Behaviors;
 
         private void DataGridTryBeginEditBehavior_OnEditEnded(object sender, CustomEditCommitArgs e)
         {
+            var dataGridName = (sender as DataGrid).Name;
+            if (dataGridName.Contains("ItemsList"))
+            {
+                return;
+            }
             if (e.PreviousValue == e.CurrentValue)
                 return;
 
