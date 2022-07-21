@@ -52,15 +52,14 @@ namespace ResXManager.View.Visuals
             nameLabel.Content = e.NeutralText;
             foreach (var c in e.Values)
             {
-                var stackPnl = new StackPanel()
+                var item = new TargetItem
                 {
-                    Orientation = Orientation.Horizontal
+                    CultureText = c.CultureValues[e.Culture],
+                    ProjectName = c.ProjectName,
+                    ResourceName = c.UniqueName,
+                    Key = c.Entry.Key
                 };
-                stackPnl.Children.Add(new Label() { Content = c.CultureValues[e.Culture] });
-                stackPnl.Children.Add(new Label() { Content = c.ProjectName,Margin=new Thickness(30,0,0,0) });
-                stackPnl.Children.Add(new Label() { Content = c.UniqueName });
-
-                choiceGrid.Items.Add(stackPnl);
+                choiceGrid.Items.Add(item);
             }
 
             while (decisionDone == DecisionResult.Pending)
@@ -120,6 +119,15 @@ namespace ResXManager.View.Visuals
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             AutoTranslation.Start(ResXManager);
+        }
+
+        private class TargetItem
+        {
+            public string CultureText { get; set; }
+            public string ResourceName { get; set; }
+            public string ProjectName { get; set; }
+            public string Key { get; set; }
+
         }
     }
 }

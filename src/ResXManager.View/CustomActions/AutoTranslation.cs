@@ -28,7 +28,8 @@ namespace ResX.Scripting
                         //our key is neutral values
                         Key = resourceEntry.Values.GetValue(resourceEntry.NeutralLanguage.Culture),
                         ProjectName = resourceEntry.Container.ProjectName,
-                        UniqueName = resourceEntry.Container.UniqueName
+                        UniqueName = resourceEntry.Container.UniqueName,
+                        Entry = resourceEntry
                     };
                     foreach (var lang in resourceEntry.Languages)
                     {

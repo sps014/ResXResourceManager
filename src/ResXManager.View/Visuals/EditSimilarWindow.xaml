@@ -13,9 +13,11 @@
       <RowDefinition Height="*"/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
-    <ListBox x:Name="ItemsList" SelectionMode="Extended">
-
-    </ListBox>
+    <DataGrid x:Name="ItemsList" SelectionMode="Single">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Key" Width="*" />
+      </DataGrid.Columns>
+    </DataGrid>
     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Stretch">
       <Button HorizontalAlignment="Left" x:Name="ConfirmBtn" Click="ConfirmBtn_Click">Confirm Changes</Button>
       <Button Margin="550 0 0 0" x:Name="SelectAllBtn" Click="SelectAllBtn_Click">Select All</Button>

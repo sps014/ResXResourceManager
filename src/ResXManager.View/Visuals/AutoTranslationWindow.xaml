@@ -39,19 +39,25 @@
           </StackPanel>
         </GroupBox>
         <GroupBox Margin="0 20 0 0">
-          <GroupBox.Header>Select Auto Translation Source Value</GroupBox.Header>
+          <GroupBox.Header>Select Source from where to derive this translation</GroupBox.Header>
         </GroupBox>
         <Grid>
           <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
           </Grid.RowDefinitions>
-          <ListBox
-                ScrollViewer.VerticalScrollBarVisibility="Visible"
+          <DataGrid SelectionMode="Single"
+                ScrollViewer.VerticalScrollBarVisibility="Visible" IsReadOnly="True"
                 x:Name="choiceGrid" HorizontalAlignment="Stretch" MaxHeight="400" Height="400"
                 VerticalAlignment="Stretch">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="Culture Value" Width="*" Binding="{Binding CultureText}"/>
+              <DataGridTextColumn Header="Key" Width="*" Binding="{Binding Key}"/>
+              <DataGridTextColumn Header="Resource Name" Width="*" Binding="{Binding ResourceName}"/>
+              <DataGridTextColumn Header="Project Name" Width="*" Binding="{Binding ProjectName}"/>
+            </DataGrid.Columns>
 
-          </ListBox>
+          </DataGrid>
           <StackPanel Orientation="Horizontal" Grid.Row="1">
             <Button x:Name="SelectBtn" Click="SelectBtn_Click" HorizontalAlignment="Left" Height="24">Use Selection</Button>
             <Button x:Name="DiscardBtn" Click="DiscardBtn_Click" Margin="645 0 0 0" HorizontalAlignment="Right" Height="24">Skip</Button>
