@@ -5,6 +5,7 @@
     <DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
+    <Platforms>AnyCPU;X64</Platforms>
   </PropertyGroup>
 
   <Import Project="..\ResXManager.VSIX.Compatibility.Shared\ResXManager.VSIX.Compatibility.Shared.projitems" Label="Shared" />

@@ -9,9 +9,7 @@
     using System.Text.RegularExpressions;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Input;
     using System.Xml;
-using System.Xml.Linq;
     using System.Xml.Serialization;
     using DataGridExtensions;
     using DocumentFormat.OpenXml;
@@ -20,7 +18,7 @@ using System.Xml.Linq;
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.Model.XLif;
-using ResXManager.View.Behaviors;
+    using ResXManager.View.Behaviors;
     using ResXManager.View.Tools;
 
     using TomsToolbox.Composition;
@@ -73,9 +71,9 @@ using ResXManager.View.Behaviors;
             }
         }
 
-        private void DataGridTryBeginEditBehavior_OnEditEnded(object sender, CustomEditCommitArgs e)
+        private void DataGridTryBeginEditBehavior_OnEditEnded(object? sender, CustomEditCommitArgs e)
         {
-            var dataGridName = (sender as DataGrid).Name;
+            var dataGridName = (sender as DataGrid)!.Name;
             if (dataGridName.Contains("ItemsList"))
             {
                 return;
@@ -332,7 +330,7 @@ using ResXManager.View.Behaviors;
         {
             var folder = _resourceManager.SolutionFolder;
             int maxDepth = 4;
-            while (maxDepth>0 && folder.Length>4 &&
+            while (maxDepth>0 && folder!.Length>4 &&
                 !File.Exists($"{folder}\\Localization\\Localization_Full.snapshot"))
             {
                 folder = new DirectoryInfo(folder).Parent.FullName;
@@ -474,7 +472,7 @@ using ResXManager.View.Behaviors;
                             Source = neutralValue!,
                             Target = new Target
                             {
-                                State = status,
+                                State = status!,
                                 Text = culturalValue!,
                             },
                             Note = r.Comments.GetValue(culturekey.Culture)!

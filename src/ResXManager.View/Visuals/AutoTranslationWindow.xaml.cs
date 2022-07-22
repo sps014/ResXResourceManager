@@ -1,19 +1,7 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
-using ResX.Scripting;
+﻿using ResX.Scripting;
 using ResXManager.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ResXManager.View.Visuals
 {
@@ -93,7 +81,7 @@ namespace ResXManager.View.Visuals
             }
         }
 
-        public ResourceManager ResXManager { get; internal set; }
+        public ResourceManager? ResXManager { get; internal set; }
 
         private void SelectBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -118,7 +106,7 @@ namespace ResXManager.View.Visuals
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            AutoTranslation.Start(ResXManager);
+            AutoTranslation.Start(ResXManager!);
         }
 
         private class TargetItem

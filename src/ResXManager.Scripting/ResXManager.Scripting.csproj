@@ -3,6 +3,7 @@
   <PropertyGroup>
     <UseWPF>true</UseWPF>
     <TargetFramework>net472</TargetFramework>
+    <Platforms>AnyCPU;X64</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Sample.ps1" />

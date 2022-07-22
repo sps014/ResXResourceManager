@@ -5,6 +5,7 @@
     <SolutionDir Condition="'$(SolutionDir)' == ''">..\.</SolutionDir>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
+    <Platforms>AnyCPU;X64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

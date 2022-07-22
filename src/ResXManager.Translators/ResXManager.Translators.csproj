@@ -3,6 +3,7 @@
   <PropertyGroup>
     <UseWPF>true</UseWPF>
     <TargetFrameworks>net472;netcoreapp3.1</TargetFrameworks>
+    <Platforms>AnyCPU;X64</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

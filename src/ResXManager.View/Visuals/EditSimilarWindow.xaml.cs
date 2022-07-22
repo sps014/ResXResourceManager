@@ -72,7 +72,8 @@ namespace ResXManager.View.Visuals
                 if (!targetItems[i].Modify)
                     continue;
 
-                cachedItems[i].Entry.Values.SetValue(CustomEditEventArgs.Culture, CustomEditEventArgs.CurrentValue);
+                cachedItems[i].Entry.Values
+                    .SetValue(CustomEditEventArgs.Culture, CustomEditEventArgs.CurrentValue);
             }
             ResourceManager.Save();
 
