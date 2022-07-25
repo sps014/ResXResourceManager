@@ -36,9 +36,9 @@ namespace ResXManager.View.CustomActions
 
         internal static bool CreateResxManagerRootFile()
         {
-            if (MessageBox.Show($"At root of your project repo please create a \"{ResXRootName}\"" +
-                                " for proper functioning of app", "Warning"
-                                , MessageBoxButton.OKCancel, MessageBoxImage.Stop) == MessageBoxResult.OK)
+            if (MessageBox.Show($"No root \"{ResXRootName}\" file found," +
+                                ", click Ok to create required file in root level of project.", "Warning"
+                                , MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
             {
                 SaveFileDialog saveFileDialog = new()
                 {
@@ -51,7 +51,7 @@ namespace ResXManager.View.CustomActions
                     saveFileDialog.InitialDirectory = Path.GetDirectoryName(Environment.GetCommandLineArgs()[1]);
                 }
 
-                if (saveFileDialog.ShowDialog().Value)
+                if (saveFileDialog.ShowDialog().GetValueOrDefault())
                 {
                     File.WriteAllText(
                         Path.Combine(Path.GetDirectoryName(saveFileDialog.FileName),
