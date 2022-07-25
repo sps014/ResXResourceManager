@@ -40,16 +40,21 @@ namespace ResXManager.View.CustomActions
                                 " for proper functioning of app", "Warning"
                                 , MessageBoxButton.OKCancel, MessageBoxImage.Stop) == MessageBoxResult.OK)
             {
-                SaveFileDialog openFileDialog = new()
+                SaveFileDialog saveFileDialog = new()
                 {
                     Filter = "ResXManager Project File | *.*",
-                    FileName = ResXRootName
+                    FileName = ResXRootName,
                 };
 
-                if (openFileDialog.ShowDialog().Value)
+                if (Environment.GetCommandLineArgs().Length >= 2)
+                {
+                    saveFileDialog.InitialDirectory = Path.GetDirectoryName(Environment.GetCommandLineArgs()[1]);
+                }
+
+                if (saveFileDialog.ShowDialog().Value)
                 {
                     File.WriteAllText(
-                        Path.Combine(Path.GetDirectoryName(openFileDialog.FileName),
+                        Path.Combine(Path.GetDirectoryName(saveFileDialog.FileName),
                         ResXRootName), string.Empty);
                     return true;
                 }

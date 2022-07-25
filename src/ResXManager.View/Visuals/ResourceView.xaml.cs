@@ -30,6 +30,7 @@
     using TomsToolbox.Wpf.Converters;
     using File = System.IO.File;
     using Group = Model.XLif.Group;
+    using ResXManager.View.CustomActions;
 
     /// <summary>
     /// Interaction logic for ResourceView.xaml
@@ -356,28 +357,38 @@
 
         private void Diff_Click(object sender, RoutedEventArgs e)
         {
-            var folder = _resourceManager.SolutionFolder;
-            int maxDepth = 4;
-            while (maxDepth>0 && folder!.Length>4 &&
-                !File.Exists($"{folder}\\Localization\\Localization_Full.snapshot"))
+            string? folder = null;
+            var hasRoot = HasResXManagerRoot(_resourceManager.SolutionFolder);
+
+            string? file = null;
+            if (hasRoot)
             {
-                folder = new DirectoryInfo(folder).Parent.FullName;
-                maxDepth--;
+                folder = ResXManagerRootDir(_resourceManager.SolutionFolder);
+                if (File.Exists($"{folder}\\Localization\\Localization_Full.snapshot"))
+                {
+                    file = $"{folder}\\Localization\\Localization_Full.snapshot";
+                }
+
             }
-            var file = $"{folder}\\Localization\\Localization_Full.snapshot";
-            while (!File.Exists(file))
+            else
             {
-                file = $"{new DirectoryInfo(_resourceManager.SolutionFolder)}";
+                CreateResxManagerRootFile();
+                Diff_Click(null, null);
+                return;
             }
+
             OpenFileDialog openFileDialog = new()
             {
                 Title = "Import Snapshot file",
                 FileName = "Snapshot",
                 Filter = " Snapshot File | *.snapshot"
             };
-            if (!showDiff && openFileDialog.ShowDialog().GetValueOrDefault())
+            if (!showDiff && file == null)
             {
-                file = openFileDialog.FileName;
+                if (openFileDialog.ShowDialog().GetValueOrDefault())
+                    file = openFileDialog.FileName;
+                else
+                    return;
             }
 
             _resourceManager.LoadSnapshot(File.ReadAllText(file));
