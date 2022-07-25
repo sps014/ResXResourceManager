@@ -518,7 +518,7 @@
 
                         var rootLevel = ResXRootProjectHelper.ResXManagerRootFile(args[1]);
                         if (rootLevel == null)
-                            ResXRootProjectHelper.CreateResxManagerRootFile();
+                            await Dispatcher.BeginInvoke(() => ResXRootProjectHelper.CreateResxManagerRootFile());
 
                         IsLoadedFromCLI = true;
 
