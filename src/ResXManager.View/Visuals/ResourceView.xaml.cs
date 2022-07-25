@@ -20,7 +20,7 @@
     using ResXManager.Model.XLif;
     using ResXManager.View.Behaviors;
     using ResXManager.View.Tools;
-
+    using static ResXManager.View.CustomActions.ResXRootProjectHelper;
     using TomsToolbox.Composition;
     using TomsToolbox.Essentials;
     using TomsToolbox.ObservableCollections;
@@ -150,9 +150,37 @@
             DataGrid.GetFilter().Clear();
         }
 
+
+
         private void ResourceManager_Loaded(object? sender, EventArgs e)
         {
             DataGrid?.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
+
+            var list = ListBox.Items;
+
+            Dictionary<string, HashSet<ResourceEntity>> projMap = new();
+            foreach (ResourceEntity item in list)
+            {
+                var projName = item.ProjectName;
+                if (!projMap.ContainsKey(projName))
+                    projMap.Add(projName, new HashSet<ResourceEntity>() { item });
+                else projMap[projName].Add(item);
+            }
+            var rootLevel = ResXManagerRootFile(_resourceManager.SolutionFolder);
+            if (rootLevel == null)
+            {
+                return;
+            }
+            var args = Environment.GetCommandLineArgs();
+            var pFile = Directory.GetFiles(Path.GetDirectoryName(args[1]), "*.csproj")[0];
+            var project_name = Path.GetFileNameWithoutExtension(pFile);
+            if (projMap.ContainsKey(project_name))
+            {
+                ListBox.SelectedItems.Clear();
+
+                foreach ( var item in projMap[project_name])
+                    ListBox.SelectedItems.Add(item);
+            }
         }
 
         private void ResourceManager_LanguageAdded(object? sender, LanguageEventArgs e)

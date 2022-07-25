@@ -7,6 +7,7 @@
     using System.Composition;
     using System.IO;
     using System.Linq;
+    using System.Resources;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
@@ -14,12 +15,11 @@
     using System.Windows.Data;
     using System.Windows.Input;
     using System.Windows.Threading;
-
     using DataGridExtensions;
-
     using ResXManager.Infrastructure;
     using ResXManager.Model;
     using ResXManager.View.ColumnHeaders;
+    using ResXManager.View.CustomActions;
     using ResXManager.View.Properties;
     using ResXManager.View.Tools;
 
@@ -28,6 +28,7 @@
     using TomsToolbox.ObservableCollections;
     using TomsToolbox.Wpf;
     using TomsToolbox.Wpf.Composition.AttributedModel;
+    using ResourceManager = Model.ResourceManager;
 
     [Shared]
     [Export]
@@ -63,6 +64,7 @@
         public ResourceManager ResourceManager { get; }
 
         public IObservableCollection<ResourceTableEntry> ResourceTableEntries { get; set; }
+        public static bool IsLoadedFromCLI { get; set; }
 
         public ObservableCollection<ResourceEntity> SelectedEntities { get; } = new();
 
@@ -513,7 +515,14 @@
                     if (args.Length >= 2 && !LoadedSolutionOnce)
                     {
                         LoadedSolutionOnce = true;
-                        _sourceFilesProvider.SolutionFolder = args[1];
+
+                        var rootLevel = ResXRootProjectHelper.ResXManagerRootFile(args[1]);
+                        if (rootLevel == null)
+                            ResXRootProjectHelper.CreateResxManagerRootFile();
+
+                        IsLoadedFromCLI = true;
+
+                        _sourceFilesProvider.SolutionFolder = ResXRootProjectHelper.ResXManagerRootDir(args[1]);
                     }
                     var solutionFolder = _sourceFilesProvider.SolutionFolder;
 
