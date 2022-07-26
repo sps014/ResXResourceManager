@@ -62,6 +62,7 @@
         internal event EventHandler<ResourceTableEntryEventArgs>? ClearFiltersRequest;
 
         public ResourceManager ResourceManager { get; }
+        public ResourceManager ShadowResourceManager { get; set; }
 
         public IObservableCollection<ResourceTableEntry> ResourceTableEntries { get; set; }
         public static bool IsLoadedFromCLI { get; set; }
@@ -303,18 +304,6 @@
 
             return SelectedEntities.Count == 1;
         }
-        private List<ResourceTableEntry> backup;
-        public void ShowDiff(IObservableCollection<ResourceTableEntry> diff)
-        {
-            backup = ResourceTableEntries.ToList();
-            ResourceTableEntries = diff;
-        }
-        public void HideDiff()
-        {
-            ResourceTableEntries.Clear();
-            //IObservableCollection<ResourceTableEntry> col= new ObservableCollection<ResourceTableEntry>();
-            //ResourceTableEntries = col;
-        }
         private void Paste(DataGrid? dataGrid)
         {
             if (dataGrid == null)
@@ -522,7 +511,7 @@
 
                         IsLoadedFromCLI = true;
 
-                        _sourceFilesProvider.SolutionFolder = ResXRootProjectHelper.ResXManagerRootDir(args[1]);
+                        _sourceFilesProvider.SolutionFolder = Path.GetDirectoryName(args[1]);
                     }
                     var solutionFolder = _sourceFilesProvider.SolutionFolder;
 

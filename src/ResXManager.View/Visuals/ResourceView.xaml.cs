@@ -31,6 +31,9 @@
     using File = System.IO.File;
     using Group = Model.XLif.Group;
     using ResXManager.View.CustomActions;
+    using ResXManager.Scripting;
+    using System.Threading.Tasks;
+    using System.Windows.Input;
 
     /// <summary>
     /// Interaction logic for ResourceView.xaml
@@ -109,7 +112,7 @@
             }
 
             var window = new EditSimilarWindow();
-            window.ResourceManager = _resourceManager;
+            window.ResourceManager = ScriptHost.ResourceManager;
             window.Cache = cache;
             window.CustomEditEventArgs = e;
             window.ShowDialog();
@@ -119,7 +122,7 @@
         {
             var result = new HashSet<TranslateContainerModel>();
 
-            foreach (var e in _resourceManager.TableEntries)
+            foreach (var e in ScriptHost.ResourceManager.TableEntries)
             {
                 var value = e.Values.GetValue(culture);
                 if (text != value || (resourceName == e.Container.UniqueName
@@ -151,38 +154,59 @@
             DataGrid.GetFilter().Clear();
         }
 
+        public static Host ScriptHost { get; private set; }
 
-
-        private void ResourceManager_Loaded(object? sender, EventArgs e)
+        private async void ResourceManager_Loaded(object? sender, EventArgs e)
         {
             DataGrid?.SetupColumns(_resourceManager, _resourceViewModel, _configuration);
 
-            var list = ListBox.Items;
+            //Now Load shadow Resource Manager if it is required
 
-            Dictionary<string, HashSet<ResourceEntity>> projMap = new();
-            foreach (ResourceEntity item in list)
+            if (!ResourceViewModel.IsLoadedFromCLI)
             {
-                var projName = item.ProjectName;
-                if (!projMap.ContainsKey(projName))
-                    projMap.Add(projName, new HashSet<ResourceEntity>() { item });
-                else projMap[projName].Add(item);
-            }
-            var rootLevel = ResXManagerRootFile(_resourceManager.SolutionFolder);
-            if (rootLevel == null)
-            {
+                _resourceViewModel.ShadowResourceManager = _resourceManager;
                 return;
             }
-            var args = Environment.GetCommandLineArgs();
-            var pFile = Directory.GetFiles(Path.GetDirectoryName(args[1]), "*.csproj")[0];
-            var project_name = Path.GetFileNameWithoutExtension(pFile);
-            if (projMap.ContainsKey(project_name))
-            {
-                ListBox.SelectedItems.Clear();
 
-                foreach ( var item in projMap[project_name])
-                    ListBox.SelectedItems.Add(item);
+
+            if (ScriptHost is not null)
+                ScriptHost.Dispose();
+
+            ScriptHost = new Host();
+            var dirPath = Environment.GetCommandLineArgs()[1];
+            if (!HasResXManagerRoot(Path.GetDirectoryName(dirPath)))
+            {
+                if (!CreateResxManagerRootFile())
+                {
+                    _resourceViewModel.ShadowResourceManager = _resourceViewModel.ResourceManager;
+                    return;
+                }
             }
+
+            ScriptHost.ResourceManager.Loaded += (_, e) =>
+            {
+                //enable editing of values now
+                //_resourceViewModel.ResourceManager.TableEntries = ScriptHost.ResourceManager.TableEntries;
+                //_resourceViewModel.ResourceManager.ResourceEntities = ScriptHost.ResourceManager.ResourceEntities;
+
+                Dispatcher.Invoke(() =>
+                {
+                    DataGrid.IsReadOnly = false;
+                    Cursor = Cursors.Arrow;
+
+                });
+
+            };
+
+            Cursor = Cursors.Wait;
+            await Task.Run(() =>
+            {
+                ScriptHost.Load(ResXManagerRootDir(dirPath));
+            });
+
+
         }
+
 
         private void ResourceManager_LanguageAdded(object? sender, LanguageEventArgs e)
         {
@@ -450,9 +474,8 @@
         private void AutoTranslateBtn_Click(object sender, RoutedEventArgs e)
         {
             var win = new AutoTranslationWindow();
-            win.ResXManager = _resourceManager;
+            win.ResXManager = ScriptHost.ResourceManager;
             win.ShowDialog();
-           
         }
 
         private void XlifBtn_Click(object sender, RoutedEventArgs e)

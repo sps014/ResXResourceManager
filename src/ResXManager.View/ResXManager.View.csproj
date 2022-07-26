@@ -40,6 +40,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ResXManager.Infrastructure\ResXManager.Infrastructure.csproj" />
     <ProjectReference Include="..\ResXManager.Model\ResXManager.Model.csproj" />
+    <ProjectReference Include="..\ResXManager.Scripting\ResXManager.Scripting.csproj" />
     <ProjectReference Include="..\ResXManager.Translators\ResXManager.Translators.csproj" />
   </ItemGroup>
   <ItemGroup>

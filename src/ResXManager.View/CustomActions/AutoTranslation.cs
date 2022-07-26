@@ -1,4 +1,5 @@
 ﻿using ResXManager.Model;
+using ResXManager.Scripting;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -13,6 +14,7 @@ namespace ResX.Scripting
     {
         public static async void Start(ResourceManager manager)
         {
+
             //get all resource representation
             var entries = manager.TableEntries.GroupBy(x => x.Container);
             int count = 0;
