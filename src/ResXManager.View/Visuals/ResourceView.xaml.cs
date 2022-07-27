@@ -34,6 +34,7 @@
     using ResXManager.Scripting;
     using System.Threading.Tasks;
     using System.Windows.Input;
+    using System.Diagnostics;
 
     /// <summary>
     /// Interaction logic for ResourceView.xaml
@@ -172,6 +173,8 @@
             if (ScriptHost is not null)
                 ScriptHost.Dispose();
 
+            DataGrid.IsReadOnly = true;
+
             ScriptHost = new Host();
             var dirPath = Environment.GetCommandLineArgs()[1];
             if (!HasResXManagerRoot(Path.GetDirectoryName(dirPath)))
@@ -193,7 +196,7 @@
                 {
                     DataGrid.IsReadOnly = false;
                     Cursor = Cursors.Arrow;
-
+                    openAppBtn.Visibility = Visibility.Visible;
                 });
 
             };
@@ -381,13 +384,12 @@
 
         private void Diff_Click(object sender, RoutedEventArgs e)
         {
-            string? folder = null;
             var hasRoot = HasResXManagerRoot(_resourceManager.SolutionFolder);
 
             string? file = null;
             if (hasRoot)
             {
-                folder = ResXManagerRootDir(_resourceManager.SolutionFolder);
+                var folder = ResXManagerRootDir(_resourceManager.SolutionFolder);
                 if (File.Exists($"{folder}\\Localization\\Localization_Full.snapshot"))
                 {
                     file = $"{folder}\\Localization\\Localization_Full.snapshot";
@@ -628,6 +630,14 @@
 
         }
 
+        private void openAppBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Process
+                .Start(Application.ResourceAssembly.Location,
+                Path.GetDirectoryName(Environment.GetCommandLineArgs()[1]))
+                ;
+            Application.Current.Shutdown();
+        }
     }
 
 }

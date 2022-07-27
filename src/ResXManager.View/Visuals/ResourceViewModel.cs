@@ -503,16 +503,27 @@
                     var args = Environment.GetCommandLineArgs();
                     if (args.Length >= 2 && !LoadedSolutionOnce)
                     {
-                        LoadedSolutionOnce = true;
+                        if (!args[1].EndsWith(".csproj", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            while (!ResXRootProjectHelper.HasResXManagerRoot(args[1]))
+                                ResXRootProjectHelper.CreateResxManagerRootFile();
 
-                        var rootLevel = ResXRootProjectHelper.ResXManagerRootFile(args[1]);
-                        if (rootLevel == null)
-                            await Dispatcher.BeginInvoke(() => ResXRootProjectHelper.CreateResxManagerRootFile());
+                            _sourceFilesProvider.SolutionFolder = ResXRootProjectHelper.ResXManagerRootDir(args[1]);
+                        }
+                        else
+                        {
+                            LoadedSolutionOnce = true;
 
-                        IsLoadedFromCLI = true;
+                            var rootLevel = ResXRootProjectHelper.ResXManagerRootFile(args[1]);
+                            if (rootLevel == null)
+                                await Dispatcher.BeginInvoke(() => ResXRootProjectHelper.CreateResxManagerRootFile());
 
-                        _sourceFilesProvider.SolutionFolder = Path.GetDirectoryName(args[1]);
+                            IsLoadedFromCLI = true;
+
+                            _sourceFilesProvider.SolutionFolder = Path.GetDirectoryName(args[1]);
+                        }
                     }
+
                     var solutionFolder = _sourceFilesProvider.SolutionFolder;
 
                     var sourceFiles = await _sourceFilesProvider.GetSourceFilesAsync(cancellationToken).ConfigureAwait(true);

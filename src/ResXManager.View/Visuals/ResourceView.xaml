@@ -365,6 +365,10 @@
                 </ContextMenu>
               </Button.ContextMenu>
             </Button>
+            <Separator></Separator>
+            <Button x:Name="openAppBtn" Click="openAppBtn_Click" Visibility="Collapsed">
+              Open Whole Solution
+            </Button>
           </ToolBar>
         </ToolBarTray>
         <Popup IsOpen="{Binding Path=IsChecked, ElementName=ColumnChooserToggleButton, Mode=OneWay}"
