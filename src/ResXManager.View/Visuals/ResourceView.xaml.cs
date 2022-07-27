@@ -78,7 +78,7 @@
 
         private void DataGridTryBeginEditBehavior_OnEditEnded(object? sender, CustomEditCommitArgs e)
         {
-            var dataGridName = (sender as DataGrid)!.Name;
+            var dataGridName = (sender as DataGrid).Name;
             if (dataGridName.Contains("ItemsList"))
             {
                 return;
@@ -174,7 +174,7 @@
                 ScriptHost.Dispose();
 
             DataGrid.IsReadOnly = true;
-
+            AutoTranslateBtn.Visibility = Visibility.Collapsed;
             ScriptHost = new Host();
             var dirPath = Environment.GetCommandLineArgs()[1];
             if (!HasResXManagerRoot(Path.GetDirectoryName(dirPath)))
@@ -197,6 +197,7 @@
                     DataGrid.IsReadOnly = false;
                     Cursor = Cursors.Arrow;
                     openAppBtn.Visibility = Visibility.Visible;
+                    AutoTranslateBtn.Visibility = Visibility.Visible;
                 });
 
             };
@@ -489,7 +490,7 @@
             foreach (var v in _resourceManager.Cultures)
             {
                 if (v.IsNeutral) continue;
-                var child = new MenuItem() { Header = v.Culture!.Name };
+                var child = new MenuItem() { Header = v.Culture.Name };
                 child.Click += (_, _) => ExportXliff(v);
                 exportXlifMenu.Items.Add(child);
             }
@@ -502,10 +503,10 @@
                 File = new Model.XLif.File()
             };
 
-            file.File.Original = _resourceViewModel.ResourceManager.SolutionFolder!;
+            file.File.Original = _resourceViewModel.ResourceManager.SolutionFolder;
             file.File.Datatype = "sln";
             file.File.Sourcelanguage = "en";
-            file.File.Targetlanguage = culturekey.Culture!.Name;
+            file.File.Targetlanguage = culturekey.Culture.Name;
             file.Version = "1.2";
             file.File.Body = new Body();
 
@@ -533,13 +534,13 @@
                         var transUnit = new Transunit
                         {
                             Id = key,
-                            Source = neutralValue!,
+                            Source = neutralValue,
                             Target = new Target
                             {
-                                State = status!,
-                                Text = culturalValue!,
+                                State = status,
+                                Text = culturalValue,
                             },
-                            Note = r.Comments.GetValue(culturekey.Culture)!
+                            Note = r.Comments.GetValue(culturekey.Culture)
                         };
                         resourceGroup.Transunits.Add(transUnit);
                     }

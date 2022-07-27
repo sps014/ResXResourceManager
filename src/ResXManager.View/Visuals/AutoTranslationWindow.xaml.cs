@@ -106,7 +106,7 @@ namespace ResXManager.View.Visuals
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            AutoTranslation.Start(ResXManager!);
+            AutoTranslation.Start(ResXManager);
         }
 
         private class TargetItem

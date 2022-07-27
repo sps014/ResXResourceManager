@@ -4,7 +4,7 @@
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-		<MediaTemplate EmbedCab="yes"/>
+		<MediaTemplate EmbedCab="yes" />
 
 		<Feature Id="ProductFeature" Title="ResXManagerSetup" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
@@ -17,13 +17,9 @@
         <!-- Step 2: Add the shortcut to your installer package -->
         <DirectoryRef Id="ApplicationProgramsFolder">
             <Component Id="ApplicationShortcut" Guid="335517f6-12cd-4501-b756-550d4293fd64">
-                <Shortcut Id="ApplicationStartMenuShortcut"
-                     Name="ResXManager "
-                   Description="My Application Description"
-                    Target="[INSTALLFOLDER]ResXManager.exe"
-                          WorkingDirectory="APPLICATIONROOTDIRECTORY"/>
-                <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
-                <RegistryValue Root="HKCU" Key="Software\Lenze\ResXManager" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+                <Shortcut Id="ApplicationStartMenuShortcut" Name="ResXManager " Description="My Application Description" Target="[INSTALLFOLDER]ResXManager.exe" WorkingDirectory="APPLICATIONROOTDIRECTORY" />
+                <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall" />
+                <RegistryValue Root="HKCU" Key="Software\Lenze\ResXManager" Name="installed" Type="integer" Value="1" KeyPath="yes" />
             </Component>
         </DirectoryRef>
         
@@ -37,7 +33,7 @@
 				  <Directory Id="zh_Hans" Name="zh-Hans" />
 				</Directory>
                 <Directory Id="ProgramMenuFolder">
-                    <Directory Id="ApplicationProgramsFolder" Name="ResXManager"/>
+                    <Directory Id="ApplicationProgramsFolder" Name="ResXManager" />
                 </Directory>
 			</Directory>
 		</Directory>
@@ -117,6 +113,12 @@
 			</Component>
 			<Component Id="TomsToolbox.Wpf.Composition.AttributedModel.dll" Guid="7fa36dc9-09a9-4c4f-af4f-a8b842629e68">
 			  <File Id="TomsToolbox.Wpf.Composition.AttributedModel.dll" Name="TomsToolbox.Wpf.Composition.AttributedModel.dll" Source="$(var.ResXManager_TargetDir)TomsToolbox.Wpf.Composition.AttributedModel.dll" />
+			</Component>
+			<Component Id="ResXManager.Scripting.dll" Guid="8ce6f46a-3f94-49d1-ac35-da99bc7c18df">
+			  <File Id="ResXManager.Scripting.dll" Name="ResXManager.Scripting.dll" Source="$(var.ResXManager_TargetDir)ResXManager.Scripting.dll" />
+			</Component>
+			<Component Id="Sample.ps1" Guid="4b3ec5a9-e761-4a7c-83c1-d9499714c386">
+			  <File Id="Sample.ps1" Name="Sample.ps1" Source="$(var.ResXManager_TargetDir)Sample.ps1" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
