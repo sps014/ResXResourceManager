@@ -39,7 +39,7 @@
             Configuration = exportProvider.GetExportedValue<Configuration>();
         }
 
-        public ResourceManager ResourceManager { get; }
+        public ResourceManager ResourceManager { get; set; }
 
         public void Load(string folder, string? exclusionFilter = @"Migrations\\\d{15}")
         {

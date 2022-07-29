@@ -163,9 +163,12 @@
 
             //Now Load shadow Resource Manager if it is required
 
+
             if (!ResourceViewModel.IsLoadedFromCLI)
             {
                 _resourceViewModel.ShadowResourceManager = _resourceManager;
+                ScriptHost = new Host();
+                ScriptHost.ResourceManager = _resourceManager;
                 return;
             }
 
