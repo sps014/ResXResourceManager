@@ -29,7 +29,7 @@ namespace ResXManager.View.Visuals
 
         public ResourceManager ResourceManager { get; internal set; }
         public HashSet<TranslateContainerModel> Cache { get; internal set; }
-        public CustomEditCommitArgs CustomEditEventArgs { get;internal set; }
+        public CustomEditCommitArgs CustomEditEventArgs { get; internal set; }
         private TargetItem[] targetItems;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -49,10 +49,10 @@ namespace ResXManager.View.Visuals
 
                 var itemz = new TargetItem
                 {
-                    Key = ec.Entry.Key,
+                    Key = item.Key,
                     Modify = false,
-                    ProjectName = ec.Entry.Container.ProjectName,
-                    ResourceName = ec.Entry.Container.UniqueName,
+                    ProjectName = item.ProjectName,
+                    ResourceName = item.UniqueName,
                     PreviousValue = ec.PreviousValue
                 };
 

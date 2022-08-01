@@ -98,8 +98,7 @@
             //built a cache for given culture text
 
             var cache = BuildCache(e.PreviousValue, culture,
-                e.Entry.Container.ProjectName,
-                e.Entry.Container.UniqueName);
+                e.Entry.Container.NeutralProjectFile.FilePath);
 
             if (!cache.Any())
                 return;
@@ -119,15 +118,17 @@
             window.ShowDialog();
         }
 
-        private HashSet<TranslateContainerModel> BuildCache(string text, string culture,string projectName,string resourceName)
+        private HashSet<TranslateContainerModel> BuildCache(string text, string culture,string filePath)
         {
             var result = new HashSet<TranslateContainerModel>();
 
             foreach (var e in ScriptHost.ResourceManager.TableEntries)
             {
                 var value = e.Values.GetValue(culture);
-                if (text != value || (resourceName == e.Container.UniqueName
-                    && projectName == e.Container.ProjectName))
+                if (text != value)
+                    continue;
+
+                if (filePath == e.Container.NeutralProjectFile.FilePath)
                     continue;
 
                 result.Add(new TranslateContainerModel()
@@ -410,7 +411,7 @@
             OpenFileDialog openFileDialog = new()
             {
                 Title = "Import Snapshot file",
-                FileName = "Snapshot",
+                FileName = "Localization_Full",
                 Filter = " Snapshot File | *.snapshot"
             };
             if (!showDiff && file == null)
