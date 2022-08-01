@@ -49,5 +49,7 @@
                 return _solution.SolutionFolder;
             }
         }
+
+        string? ISourceFilesProvider.SolutionFolder { get { return SolutionFolder; } set { } }
     }
 }

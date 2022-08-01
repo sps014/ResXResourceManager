@@ -20,8 +20,11 @@ namespace ResXManager.View.Visuals
 
         }
 
+        int cx = 0;
         private void AutoTranslation_OnFinished()
         {
+            if (cx == 0)
+                MessageBox.Show("No translation Required");
             Close();
         }
 
@@ -29,6 +32,7 @@ namespace ResXManager.View.Visuals
 
         private async Task<RequireActionResult> AutoTranslation_OnTranslationAction(RequireActionEventArg e)
         {
+            cx++;
             selectPanel.Visibility = Visibility.Visible;
             decisionDone = DecisionResult.Pending;
             choiceGrid.Visibility = Visibility.Visible;
