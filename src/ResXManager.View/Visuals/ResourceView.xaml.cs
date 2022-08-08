@@ -98,7 +98,7 @@
             //built a cache for given culture text
 
             var cache = BuildCache(e.PreviousValue, culture,
-                e.Entry.Container.NeutralProjectFile.FilePath,e.Entry.Key);
+                e.Entry.Container.NeutralProjectFile.FilePath, e.Entry.Key);
 
             if (!cache.Any())
                 return;
@@ -118,7 +118,7 @@
             window.ShowDialog();
         }
 
-        private HashSet<TranslateContainerModel> BuildCache(string text, string culture,string filePath,string k)
+        private HashSet<TranslateContainerModel> BuildCache(string text, string culture, string filePath, string k)
         {
             var result = new HashSet<TranslateContainerModel>();
 
@@ -128,7 +128,7 @@
                 if (text != value)
                     continue;
 
-                if (filePath == e.Container.NeutralProjectFile.FilePath && e.Key!=k)
+                if (filePath == e.Container.NeutralProjectFile.FilePath && e.Key != k)
                     continue;
 
                 result.Add(new TranslateContainerModel()
@@ -421,7 +421,7 @@
                 else
                     return;
             }
-
+            if (file is not null)
             _resourceManager.LoadSnapshot(File.ReadAllText(file));
 
             Perform();
