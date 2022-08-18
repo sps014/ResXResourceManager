@@ -86,6 +86,7 @@
             if (e.PreviousValue == e.CurrentValue)
                 return;
 
+
             var match = Regex.Match(e.ColumnName, @"\[\.(.*)\]");
 
             if (!match.Success)
@@ -128,7 +129,7 @@
                 if (text != value)
                     continue;
 
-                if (filePath == e.Container.NeutralProjectFile.FilePath && e.Key != k)
+                if (filePath == e.Container.NeutralProjectFile.FilePath && e.Key == k)
                     continue;
 
                 result.Add(new TranslateContainerModel()
