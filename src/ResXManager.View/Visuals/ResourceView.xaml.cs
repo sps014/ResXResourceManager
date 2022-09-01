@@ -639,8 +639,8 @@
         private void openAppBtn_Click(object sender, RoutedEventArgs e)
         {
             Process
-                .Start(Application.ResourceAssembly.Location,
-                Path.GetDirectoryName(Environment.GetCommandLineArgs()[1]))
+                .Start(Application.ResourceAssembly.Location
+                ,$"\"{Path.GetDirectoryName(Environment.GetCommandLineArgs()[1])}\"")
                 ;
             Application.Current.Shutdown();
         }
