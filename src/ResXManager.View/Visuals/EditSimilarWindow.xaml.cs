@@ -4,6 +4,7 @@ using ResXManager.View.Behaviors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using ResourceManager = ResXManager.Model.ResourceManager;
 
 namespace ResXManager.View.Visuals
 {
@@ -63,6 +65,7 @@ namespace ResXManager.View.Visuals
             }
         }
 
+        
         private void ConfirmBtn_Click(object sender, RoutedEventArgs e)
         {
             var cachedItems = Cache.ToList();

@@ -75,4 +75,7 @@
       <Version>2.7.3</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Diagrams\" />
+  </ItemGroup>
 </Project>

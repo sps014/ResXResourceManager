@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ResXManager.View.Visuals.AutoTranslationWindow">
+    <Position X="1" Y="2.25" Width="3.75" />
+    <NestedTypes>
+      <Enum Name="ResXManager.View.Visuals.AutoTranslationWindow.DecisionResult" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Visuals\AutoTranslationWindow.xaml.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Class Name="ResXManager.View.Visuals.AutoTranslationWindow.TargetItem" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Visuals\AutoTranslationWindow.xaml.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAgQAABAABAASAAAAAAAgAI=</HashCode>
+      <FileName>Visuals\AutoTranslationWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ResXManager.View.Visuals.EditSimilarWindow">
+    <Position X="6.5" Y="2.5" Width="4" />
+    <NestedTypes>
+      <Class Name="ResXManager.View.Visuals.EditSimilarWindow.TargetItem" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Visuals\EditSimilarWindow.xaml.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAEAAAhAAAAAEAgCAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Visuals\EditSimilarWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
