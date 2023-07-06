@@ -390,63 +390,11 @@
 
         private void Diff_Click(object sender, RoutedEventArgs e)
         {
-            var hasRoot = HasResXManagerRoot(_resourceManager.SolutionFolder);
+            DiffViewer viewer = new DiffViewer();
+            viewer.ResourceManager = ScriptHost.ResourceManager;
+            viewer.Initialize();
+            viewer.ShowDialog();
 
-            string? file = null;
-            if (hasRoot)
-            {
-                var folder = ResXManagerRootDir(_resourceManager.SolutionFolder);
-                if (File.Exists($"{folder}\\Localization\\Localization_Full.snapshot"))
-                {
-                    file = $"{folder}\\Localization\\Localization_Full.snapshot";
-                }
-
-            }
-            else
-            {
-                CreateResxManagerRootFile();
-                Diff_Click(null, null);
-                return;
-            }
-
-            OpenFileDialog openFileDialog = new()
-            {
-                Title = "Import Snapshot file",
-                FileName = "Localization_Full",
-                Filter = " Snapshot File | *.snapshot"
-            };
-            if (!showDiff && file == null)
-            {
-                if (openFileDialog.ShowDialog().GetValueOrDefault())
-                    file = openFileDialog.FileName;
-                else
-                    return;
-            }
-            if (file is not null)
-            _resourceManager.LoadSnapshot(File.ReadAllText(file));
-
-            Perform();
-
-        }
-        private bool showDiff;
-        public void Perform()
-        {
-
-            if (!showDiff)
-            {
-                var changes = DiffHelper.CalcDiff(_resourceManager);
-                _resourceViewModel.ResourceTableEntries =
-                    _resourceViewModel.ResourceTableEntries
-                    .ObservableWhere(y => changes.Contains(y))
-                    .ObservableSelectMany(x => x.Container.Entries);
-            }
-            else
-            {
-                _resourceViewModel.ResourceTableEntries = _resourceManager.TableEntries;
-
-            }
-            showDiff = !showDiff;
-            diff_check.IsChecked = showDiff;
         }
 
         private void AutoTranslateBtn_Click(object sender, RoutedEventArgs e)

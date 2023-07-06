@@ -342,8 +342,7 @@
             </Button>
             <Button ToolTip="Create Diff" Style="{StaticResource ToolbarCommandButtonStyle}" Click="Diff_Click">
               <StackPanel Orientation="Horizontal">
-                <CheckBox x:Name="diff_check" IsEnabled="False" Margin="2 0 2 0"/>
-                <TextBlock x:Name="diff_label">Show Diff Only</TextBlock>
+                <TextBlock x:Name="diff_label">Diff Viewer</TextBlock>
               </StackPanel>
             </Button>
             <Separator></Separator>
