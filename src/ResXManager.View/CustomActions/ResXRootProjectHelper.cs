@@ -7,7 +7,7 @@ namespace ResXManager.View.CustomActions
 {
     public static class ResXRootProjectHelper
     {
-        public const string ResXRootName = "_resxmanager";
+        public const string ResXRootName = ".resxmanager";
 
         public static string? ResXManagerRootFile(string currentPath, int maxDepth = 5)
         {

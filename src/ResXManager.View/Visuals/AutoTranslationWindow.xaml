@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Loaded="Window_Loaded"
         xmlns:local="clr-namespace:ResXManager.View.Visuals" Title="Auto Translation Wizard"
-        ResizeMode="NoResize"
+        ResizeMode="NoResize" Closing="Window_Closing"
         mc:Ignorable="d" Height="700" Width="800" WindowStyle="ToolWindow">
   <Grid>
     <Grid>

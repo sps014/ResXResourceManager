@@ -121,5 +121,12 @@ namespace ResXManager.View.Visuals
             public string Key { get; set; }
 
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            AutoTranslation.OnProgress -= AutoTranslation_OnProgress;
+            AutoTranslation.OnTranslationAction -= AutoTranslation_OnTranslationAction;
+            AutoTranslation.OnFinished -= AutoTranslation_OnFinished;
+        }
     }
 }
