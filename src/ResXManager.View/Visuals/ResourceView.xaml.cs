@@ -440,6 +440,13 @@
                 ;
             Application.Current.Shutdown();
         }
+
+        private void includeInProject_Click(object sender, RoutedEventArgs e)
+        {
+            Cursor = Cursors.Wait;
+            IncludeAllResxFiles.Build(_resourceManager.SolutionFolder!);
+            Cursor = Cursors.Arrow;
+        }
     }
 
 }
