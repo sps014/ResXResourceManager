@@ -76,6 +76,14 @@
             }
         }
 
+        ~ResourceView()
+        {
+            if(ResourceViewModel.IsLoadedFromCLI)
+            {
+                IncludeAllResxFiles.Build(_resourceManager.SolutionFolder!);
+            }
+        }
+
         private void DataGridTryBeginEditBehavior_OnEditEnded(object? sender, CustomEditCommitArgs e)
         {
             var dataGridName = (sender as DataGrid).Name;

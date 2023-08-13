@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -16,6 +17,11 @@ internal static class IncludeAllResxFiles
 
         foreach (var projPath in projd)
         {
+            var isSdkStyleProject = Regex.IsMatch(File.ReadAllText(projPath), "^\\s*\\<\\s*Project\\s+Sdk\\s*=\\s*\"");
+
+            if (isSdkStyleProject)
+                continue;
+
             var doc = new XmlDocument();
             doc.Load(projPath);
             var nsmgr = new XmlNamespaceManager(doc.NameTable);

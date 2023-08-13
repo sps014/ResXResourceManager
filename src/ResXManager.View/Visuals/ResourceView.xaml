@@ -368,10 +368,10 @@
             <Button x:Name="openAppBtn" Click="openAppBtn_Click" Visibility="Collapsed">
               Open Whole Solution
             </Button>
-            <Button ToolTip="For C# older project format (non SDK-Style) includes newly Resx as part of compilation" Style="{StaticResource ToolbarCommandButtonStyle}"
+            <!--<Button ToolTip="For C# older project format (non SDK-Style) includes newly Resx as part of compilation" Style="{StaticResource ToolbarCommandButtonStyle}"
                     x:Name="includeInProject" Click="includeInProject_Click">
               <TextBlock Text="Include in Project"/>
-            </Button>
+            </Button>-->
           </ToolBar>
         </ToolBarTray>
         <Popup IsOpen="{Binding Path=IsChecked, ElementName=ColumnChooserToggleButton, Mode=OneWay}"
