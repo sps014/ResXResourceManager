@@ -14,7 +14,7 @@
     using ResXManager.Properties;
     using ResXManager.View;
     using ResXManager.View.Themes;
-
+    using ResXManager.View.Visuals;
     using TomsToolbox.Composition;
     using TomsToolbox.Essentials;
     using TomsToolbox.Wpf;
@@ -111,6 +111,11 @@
 
             Settings.StartupLocation = _lastKnownLocation;
             Settings.StartupSize = _lastKnownSize;
+            var solutionFolder = ResourceView.SolutionFolder;
+            if(solutionFolder != null)
+            {
+                IncludeAllResxFiles.Build(solutionFolder);
+            }
         }
 
         private static Settings Settings => Settings.Default;

@@ -78,10 +78,10 @@
 
         ~ResourceView()
         {
-            if(ResourceViewModel.IsLoadedFromCLI)
-            {
-                IncludeAllResxFiles.Build(_resourceManager.SolutionFolder!);
-            }
+            //if(ResourceViewModel.IsLoadedFromCLI)
+            //{
+            //    IncludeAllResxFiles.Build(_resourceManager.SolutionFolder!);
+            //}
         }
 
         private void DataGridTryBeginEditBehavior_OnEditEnded(object? sender, CustomEditCommitArgs e)
@@ -166,6 +166,8 @@
         }
 
         public static Host ScriptHost { get; private set; }
+
+        public static string? SolutionFolder => ScriptHost?.ResourceManager?.SolutionFolder;
 
         private async void ResourceManager_Loaded(object? sender, EventArgs e)
         {

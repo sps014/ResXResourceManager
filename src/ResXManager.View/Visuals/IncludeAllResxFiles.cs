@@ -9,7 +9,7 @@ using System.Xml;
 
 namespace ResXManager.View.Visuals;
 
-internal static class IncludeAllResxFiles
+public static class IncludeAllResxFiles
 {
     public static void Build(string solutionFolder)
     {
@@ -52,6 +52,8 @@ internal static class IncludeAllResxFiles
 
                     if (IsWinformDesignerFile(resource))
                         csFile += ".cs";
+                    else
+                        csFile += ".resx";
 
                     dependentUpon.InnerText = csFile;
                     embeddedResource.AppendChild(dependentUpon);
@@ -77,6 +79,8 @@ internal static class IncludeAllResxFiles
 
                         if (IsWinformDesignerFile(resource))
                             csFile += ".cs";
+                        else
+                            csFile += ".resx";
 
                         dependentUpon.InnerText = csFile;
                         file.AppendChild(dependentUpon);
